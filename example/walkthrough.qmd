@@ -1,0 +1,174 @@
+---
+title: "ausparl: a worked example"
+subtitle: "A short tour of the Australian Hansard database from R"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    embed-resources: true
+    df-print: tibble
+engine: knitr
+execute:
+  echo: true
+  warning: false
+---
+
+<!-- The plain R version, walkthrough.R, is generated from this file; after editing it, run
+knitr::purl("example/walkthrough.qmd", "example/walkthrough.R", documentation = 1)
+from the top folder of the repository. -->
+
+```{r setup}
+#| include: false
+# ausparl: a worked example. walkthrough.R is the plain R version of walkthrough.qmd, made
+# with knitr::purl(); edit the .qmd, not the .R. Run it from the top folder of the repository
+# with source("example/walkthrough.R", echo = TRUE), or step through it line by line.
+library(ausparl)
+suppressPackageStartupMessages(library(dplyr))
+library(ggplot2)
+
+# Use the full database in dataset/ if it is there (Quarto runs this file from example/, a
+# plain R run usually starts in the top folder); otherwise the copy db_connect() finds by
+# itself (AUSPARL_DB, or one installed by db_download()); otherwise the bundled sample.
+local_db <- c(
+  file.path("..", "dataset", "hansard.duckdb"),
+  file.path("dataset", "hansard.duckdb")
+)
+local_db <- local_db[file.exists(local_db)]
+if (length(local_db) > 0) {
+  db_connect(path = local_db[1])
+  on_sample <- FALSE
+} else {
+  on_sample <- tryCatch(
+    {
+      db_connect()
+      FALSE
+    },
+    ausparl_error = function(e) {
+      db_connect(sample = TRUE)
+      TRUE
+    }
+  )
+}
+```
+
+```{r sample-note}
+#| echo: false
+#| results: asis
+if (on_sample) {
+  cat(
+    "Note: this run uses the small sample database bundled with ausparl (eight sitting",
+    "days), so the numbers are small. For the full database, run",
+    "ausparl::db_download(dir = \"dataset\") once from the top folder of the repository.\n"
+  )
+}
+```
+
+## 1. Connect and check the version
+
+`db_connect()` opens the database read-only. `db_info()` says which build it is: quote
+`schema_version` and `built_at` in your methods.
+
+```{r connect}
+db_info() |>
+  select(schema_version, built_at, n_sittings, n_actions, n_members, fts_available)
+```
+
+## 2. Find a member and their profile
+
+Every member has a Parliamentary Handbook id, `PHID`, which links them across all tables.
+`find_member()` finds it from pieces of a name, in any order and any case.
+
+```{r find-member}
+howard <- find_member("john howard")
+howard |> select(PHID, DisplayName, chambers, first_service, last_service)
+```
+
+`member_profile()` gathers what is recorded about one member. A ministerial role reads as
+`Role` + `Prep` + `Entity`, for example "Minister" + "for" + "Finance".
+
+```{r profile}
+profile <- member_profile(howard$PHID)
+profile$ministry_records |>
+  distinct(Role, Prep, Entity, RDateStart, RDateEnd) |>
+  mutate(role = trimws(paste(Role, Prep, Entity))) |>
+  select(role, RDateStart, RDateEnd) |>
+  arrange(RDateStart)
+```
+
+## 3. A term across the years
+
+`search_speeches_by_terms()` finds the turns that use a term, with `n_hits`, the number of
+times it occurs. With `collect = FALSE` the counting by year runs inside the database.
+
+```{r term-by-year}
+if (isTRUE(db_info()$fts_available)) {
+  by_year <- search_speeches_by_terms("immigration", include_text = FALSE, collect = FALSE) |>
+    group_by(year = year(date)) |>
+    summarise(n_turns = n(), n_mentions = sum(n_hits, na.rm = TRUE)) |>
+    collect() |>
+    arrange(year)
+  print(
+    ggplot(by_year, aes(year, n_mentions)) +
+      geom_line() +
+      geom_point() +
+      labs(x = NULL, y = "Mentions", title = "\"immigration\" in Hansard, by year")
+  )
+} else {
+  cat("Full-text search is not available on this machine, so the term search is skipped.\n")
+}
+```
+
+## 4. Turns, interjections, government and opposition
+
+The database keeps the structure of debate. On 15 October 2002, in the House, a turn can be
+one speech broken by interjections: `get_speech_turns()` returns it as one row, with
+`n_actions` the number of pieces it was recorded in. `get_interjections()` says who
+interrupted whom.
+
+```{r turns}
+turns <- get_speech_turns(sitting_id = "house_2002-10-15", include_text = FALSE)
+nrow(turns)
+turns |>
+  filter(n_actions > 1) |>
+  select(turn_no, name_raw, party_at_time, n_actions) |>
+  head(5)
+
+get_interjections(from = "2002-10-15", to = "2002-10-15", chamber = "house") |>
+  count(interjector_name, target_name, sort = TRUE) |>
+  head(5)
+```
+
+`add_government_status()` adds whether the speaker's party was in government that day. On a
+lazy table the whole count runs in the database. Here, the 40th Parliament (2002-2004).
+
+```{r government}
+get_speeches(parliament_id = 40, include_text = FALSE, collect = FALSE) |>
+  filter(!is.na(PHID)) |>
+  add_government_status() |>
+  count(chamber, government_status_at_time) |>
+  arrange(chamber, government_status_at_time) |>
+  collect()
+```
+
+## 5. Hand off to text analysis
+
+`as_corpus()` turns a result with text into a quanteda corpus; the other columns become
+document variables. Here, John Howard's turns in the 40th Parliament, and their most
+frequent words.
+
+```{r corpus}
+corp <- get_speeches(member = howard$PHID, parliament_id = 40, limit = 100) |>
+  as_corpus()
+quanteda::ndoc(corp)
+
+quanteda::tokens(corp, remove_punct = TRUE, remove_numbers = TRUE) |>
+  quanteda::tokens_tolower() |>
+  quanteda::tokens_remove(quanteda::stopwords("en")) |>
+  quanteda::dfm() |>
+  quanteda::topfeatures(15)
+```
+
+```{r disconnect}
+#| include: false
+db_disconnect()
+```

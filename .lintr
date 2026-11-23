@@ -1,0 +1,10 @@
+linters: linters_with_defaults(
+    line_length_linter(100),
+    object_name_linter(
+      styles = "snake_case",
+      regexes = c(ausph_column = "^[A-Z][A-Za-z0-9]*$")
+    )
+  )
+exclusions: list(
+    "R/query-tables.R"
+  )

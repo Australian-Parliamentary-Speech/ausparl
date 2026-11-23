@@ -1,0 +1,11 @@
+^data-raw$
+^Makefile$
+^\.lintr$
+^\.quarto$
+^README\.md$
+^LICENSE\.md$
+^vignettes/.*\.orig$
+^.*\.Rproj$
+^\.Rproj\.user$
+^example$
+^dataset$

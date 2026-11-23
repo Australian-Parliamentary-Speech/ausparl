@@ -1,0 +1,29 @@
+# R
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+inst/doc/
+*.tar.gz
+ausparl.Rcheck/
+
+# Local database copies never enter the repo (only the small sample under inst/extdata/ does)
+*.duckdb.wal
+/data/
+*.part
+
+# Quarto render output of the worked example
+/.quarto/
+example/walkthrough.html
+example/walkthrough_files/
+example/.quarto/
+example/.gitignore
+
+# OS
+.DS_Store
+
+# The downloaded database in dataset/ is never tracked (only its README is)
+dataset/*.duckdb
+dataset/*.part
+dataset/*.verified

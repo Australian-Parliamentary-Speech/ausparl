@@ -1,0 +1,244 @@
+---
+title: "Getting started with ausparl"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with ausparl}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<!-- This is the source of the vignette. Edit this file, never vignettes/ausparl.Rmd, and
+rebuild with `make vignette` (needs AUSPARL_DB). The generated file is precomputed against the
+full database, so building it needs neither the database nor the network. -->
+
+ausparl queries the Australian Hansard database: every sitting of the House of
+Representatives and the Senate since 1901, split into turns (speeches, questions, answers and
+interjections) and linked to members, parties, ministries and electorates. This vignette walks
+through a typical analysis in eight steps. It was computed on the full database; the code works
+the same on the small sample database bundled with the package, though the answers differ.
+For a shorter worked example to run from start to finish, see the `example/` folder of the
+[GitHub repository](https://github.com/Australian-Parliamentary-Speech/ausparl).
+
+```{r packages, message = FALSE}
+library(ausparl)
+library(dplyr)
+library(ggplot2)
+```
+
+## 1. Getting the data
+
+The database is a single DuckDB file, `hansard.duckdb`, of about 9.5 GB. ausparl does not
+ship it. Each ausparl release is pinned to one version of the database on Zenodo, which
+`db_download()` fetches:
+
+```{r download, eval = FALSE}
+db_download()
+```
+
+It saves the database in your user data directory, resumes an interrupted download when you
+run it again, and checks the file before installing it. After that, `db_connect()` and every
+other ausparl function use it with no further setup. To keep the file in a folder of your
+own instead, give it with `db_download(dir = "dataset")`, which returns the installed file's
+path, and open that copy with `db_connect(path = )`.
+
+If you already have a copy, point the `AUSPARL_DB` environment variable at it instead, for
+example in your `~/.Renviron`. It takes precedence over the downloaded copy:
+
+```{r env-var, eval = FALSE}
+Sys.setenv(AUSPARL_DB = "/path/to/hansard.duckdb")
+```
+
+Every ausparl function then connects to it when first needed. To try the package without the
+full database, connect to the sample bundled with it instead:
+
+```{r sample, eval = FALSE}
+db_connect(sample = TRUE)
+```
+
+The database is always opened read-only, and DuckDB's memory use is capped by the
+`ausparl.memory_limit` option (3 GB by default).
+
+## 2. Connect and check the version
+
+`db_connect()` with no arguments opens the database named by `AUSPARL_DB`. `db_info()`
+reports which build you are using; quote its `schema_version` and `built_at` in your methods.
+
+```{r connect}
+db_connect()
+db_info() |>
+  select(schema_version, built_at, n_sittings, n_actions, n_members, fts_available)
+```
+
+## 3. Find a member
+
+Members are identified by their Parliamentary Handbook id, `PHID`. `find_member()` looks
+one up from pieces of a name, in any order and any case.
+
+```{r find-member}
+howard <- find_member("john howard")
+howard |> select(PHID, Gender, State, chambers, first_service, last_service)
+```
+
+`member_profile()` gathers everything recorded about one member into a list of tables.
+A ministerial role reads as `Role`, `Prep` and `Entity` together, such as "Minister Assisting
+the Prime Minister".
+
+```{r profile}
+profile <- member_profile("ZD4")
+sapply(profile, nrow)
+profile$parl_service |> select(Electorate, DateStart, DateEnd) |> head(3)
+profile$ministry_records |>
+  distinct(Role, Prep, Entity, RDateStart, RDateEnd) |>
+  arrange(RDateStart)
+```
+
+## 4. That member's turns
+
+`get_speeches()` returns one row per turn. Here we take John Howard's turns as a Liberal
+in the 41st Parliament (2004-2007), his last as Prime Minister. The `party` filter applies to
+the party at the time of the turn, so it also works for members who changed party.
+`include_text = FALSE` leaves out the speech text, which keeps the result small.
+
+```{r howard-41}
+turns <- get_speeches(
+  member = "ZD4",
+  party = "Liberal Party of Australia",
+  parliament_id = 41,
+  include_text = FALSE
+)
+nrow(turns)
+turns |> count(is_speech, is_question, is_answer)
+```
+
+With `collect = FALSE` the result stays in the database as a lazy table, so dplyr verbs run
+inside DuckDB. Here we count his turns in every parliament he sat in.
+
+```{r howard-all}
+get_speeches(member = "ZD4", include_text = FALSE, collect = FALSE) |>
+  count(parliament_id) |>
+  arrange(parliament_id) |>
+  collect()
+```
+
+## 5. Search for a term
+
+`search_speeches_by_terms()` finds the turns that use a word or phrase. It returns one row
+per matching turn, with `n_hits`, the exact number of occurrences in that turn. Counts by year
+or by speaker are ordinary aggregations over that result. Use `collect = FALSE` so that they run
+inside DuckDB, and `include_text = FALSE` so the text is not loaded.
+
+```{r search}
+hits <- search_speeches_by_terms(
+  "immigration",
+  from = 1990, to = 2020,
+  include_text = FALSE, collect = FALSE
+)
+
+hits |>
+  summarise(n_turns = n(), n_occurrences = sum(n_hits, na.rm = TRUE)) |>
+  collect()
+```
+
+Mentions per year:
+
+```{r search-by-year}
+by_year <- hits |>
+  group_by(year = year(date)) |>
+  summarise(n_turns = n(), n_occurrences = sum(n_hits, na.rm = TRUE)) |>
+  collect() |>
+  arrange(year)
+head(by_year)
+```
+
+```{r search-by-year-plot, fig.cap = "Occurrences of 'immigration' per year, 1990-2020.", fig.alt = "Line chart of the number of times 'immigration' is said in Parliament each year from 1990 to 2020."}
+ggplot(by_year, aes(year, n_occurrences)) +
+  geom_line() +
+  geom_point() +
+  labs(x = NULL, y = "Occurrences", title = "\"immigration\" in Hansard, 1990-2020")
+```
+
+Who mentioned it most? Joining to the members table adds names. We keep only turns with a
+member id (`PHID`).
+
+```{r search-by-speaker}
+hits |>
+  filter(!is.na(PHID)) |>
+  group_by(PHID) |>
+  summarise(n_turns = n(), n_occurrences = sum(n_hits, na.rm = TRUE)) |>
+  left_join(get_members(columns = c("PHID", "DisplayName"), collect = FALSE), by = "PHID") |>
+  arrange(desc(n_occurrences)) |>
+  head(10) |>
+  collect()
+```
+
+## 6. Add context
+
+The `add_` functions add what was true of the speaker on the day of each turn. Here we take
+the 2005 turns that mention immigration and add each speaker's party, role and whether their
+party was in government. `add_party()` notes that the search result already carries the
+party columns and adds only the abbreviation.
+
+```{r context}
+turns_2005 <- search_speeches_by_terms("immigration", from = 2005, to = 2005,
+                                       include_text = FALSE)
+with_context <- turns_2005 |>
+  add_party() |>
+  add_role() |>
+  add_government_status()
+
+with_context |>
+  select(date, PHID, party_abbrev_at_time, role_at_time, government_status_at_time) |>
+  head()
+
+with_context |> count(government_status_at_time, role_at_time)
+```
+
+Turns with no member id get `NA` in the added columns.
+
+## 7. Speaking activity
+
+`member_activity()` counts turns, speeches, questions, answers, interjections and words for
+each member, parliament and chamber. Here we compare members of the 46th Parliament
+(2019-2022) by gender, taking `Gender` from the members table.
+
+```{r activity}
+activity <- member_activity(parliament_id = 46) |>
+  left_join(get_members(columns = c("PHID", "Gender")), by = "PHID")
+
+activity |>
+  group_by(chamber, Gender) |>
+  summarise(
+    members = n(),
+    median_turns = median(n_turns),
+    median_words = median(n_words),
+    .groups = "drop"
+  )
+```
+
+```{r activity-plot, fig.cap = "Words spoken per member in the 46th Parliament, by gender.", fig.alt = "Box plots of words spoken per member in the 46th Parliament, by gender, for the House and the Senate."}
+ggplot(activity, aes(Gender, n_words)) +
+  geom_boxplot() +
+  facet_wrap(~chamber) +
+  scale_y_log10() +
+  labs(x = NULL, y = "Words spoken (log scale)", title = "Words per member, 46th Parliament")
+```
+
+## 8. Hand off to text analysis
+
+`as_corpus()` turns a result with text into a quanteda corpus, keeping the other columns as
+document variables. Here we take twenty of John Howard's turns that mention immigration while
+he was Prime Minister.
+
+```{r corpus}
+howard_immigration <- search_speeches_by_terms(
+  "immigration",
+  member = "ZD4", chamber = "house", from = 1996, to = 2007,
+  limit = 20
+)
+corp <- as_corpus(howard_immigration)
+corp
+```
+
+```{r disconnect}
+db_disconnect()
+```
