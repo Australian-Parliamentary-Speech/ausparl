@@ -3,8 +3,7 @@
 This vignette describes the database that ausparl queries: what it
 contains, how its tables fit together, the identifiers that link them,
 and the conventions behind its columns. It is a reference to keep open
-while you work; for a worked analysis see
-[`vignette("ausparl")`](https://australian-parliamentary-speech.github.io/ausparl/articles/ausparl.md).
+while you work.
 
 Every example here runs on the small sample database bundled with the
 package (eight sitting days), so the numbers are small. The full

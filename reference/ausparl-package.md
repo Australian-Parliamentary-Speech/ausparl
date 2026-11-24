@@ -9,10 +9,8 @@ their results come back into R; the database is opened read-only and
 never loaded into memory.
 
 Start with
-[`vignette("ausparl")`](https://australian-parliamentary-speech.github.io/ausparl/articles/ausparl.md)
-for a worked analysis, and
-[`vignette("database")`](https://australian-parliamentary-speech.github.io/ausparl/articles/database.md)
-for a guide to the tables, identifiers and conventions of the database.
+[`vignette("database")`](https://australian-parliamentary-speech.github.io/ausparl/articles/database.md),
+a guide to the tables, identifiers and conventions of the database.
 
 ## Getting the database
 
