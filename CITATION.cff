@@ -36,8 +36,8 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.24491242
     description: ausparl 0.1.1
-version: 0.1.2
-date-released: "2026-11-24"
+version: 0.1.3
+date-released: "2026-11-25"
 license: GPL-3.0-or-later
 repository-code: "https://github.com/Australian-Parliamentary-Speech/ausparl"
 url: "https://australian-parliamentary-speech.github.io/ausparl/"

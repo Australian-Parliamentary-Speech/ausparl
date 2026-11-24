@@ -1,4 +1,4 @@
-# ausparl (development version)
+# ausparl 0.1.3
 
 * `db_connect()` with no arguments now also finds the full database used earlier in the
   session (as `db_info()` and the query functions already did), and `hansard.duckdb` in the
