@@ -4,16 +4,20 @@
 \alias{db_download}
 \title{Download the Hansard database}
 \usage{
-db_download(force = FALSE, dir = NULL)
+db_download(force = FALSE, dir = NULL, background = FALSE)
 }
 \arguments{
 \item{force}{If \code{TRUE}, download again even when a verified copy is already installed.}
 
 \item{dir}{A directory to install the database in, as a single string. \code{NULL} (the default)
 uses the ausparl user data directory.}
+
+\item{background}{If \code{TRUE}, run the download in the background (an RStudio background job,
+or a separate R process) and return straight away. See the section "In the background".}
 }
 \value{
-The path of the installed database file, invisibly.
+The path of the installed database file, invisibly. With \code{background = TRUE}, the
+path it will be installed at, returned before the download finishes.
 }
 \description{
 Downloads the full Hansard database that this version of ausparl was released with, from
@@ -34,6 +38,21 @@ folder. \code{\link[=db_connect]{db_connect()}} does not look there by itself: o
 verified copy of the same database version already in \code{dir} is reused; a copy of another
 version is replaced.
 
+\strong{In the background.} With \code{background = TRUE} the download runs outside your R session, so
+you can keep working while it runs. In RStudio it runs as a background job, which shows its
+progress in the Background Jobs pane. Elsewhere (Positron, R in a terminal) it runs in a
+separate R process that writes its progress to a log file, whose path is printed; that
+process keeps going if you close your R session. Either way the download is the same: it
+resumes, is checksum-verified, and is installed in the same place. When it has finished,
+connect with \code{\link[=db_connect]{db_connect()}} as usual.
+
+\strong{One download at a time.} While a download runs, a lock file (\code{hansard.duckdb.lock}) sits
+next to the partial download. Calling \code{db_download()} again for the same place meanwhile is
+an error that reports how much has been downloaded so far. A lock left by a download that
+was killed is removed automatically when it was made on the same computer; on Windows, or
+for a lock made on another computer (for example in a synced folder), the error says which
+file to delete.
+
 \code{db_connect()} never downloads anything itself. Each ausparl release pins exactly one
 database version, so an older ausparl never fetches a newer database it cannot read. To use
 a different database version, install the ausparl release that pins it.
@@ -49,6 +68,9 @@ db_disconnect()
 # Or into a folder of your project, then open it by path.
 path <- db_download(dir = "dataset")
 db_connect(path = path)
+
+# In the background, so you can keep working; connect once it has finished.
+db_download(background = TRUE)
 }
 }
 \seealso{
