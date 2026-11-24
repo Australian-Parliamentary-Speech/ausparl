@@ -110,7 +110,13 @@ get_speeches(member = howard, limit = 20) |>
 db_disconnect()
 ```
 
-The vignette walks through a full analysis: `vignette("ausparl")`.
+Two vignettes go further: `vignette("ausparl")` walks through a full analysis, and
+`vignette("database")` describes the database itself: its tables, identifiers, turn types,
+speaker matching and provenance. The package help page, `?ausparl`, lists the functions by task
+and the package options.
+
+The documentation is also online at
+<https://australian-parliamentary-speech.github.io/ausparl/>.
 
 ## Example code
 
@@ -150,6 +156,11 @@ version.
 |---|---|---|
 | 0.1.0 | 7.0.0-20261123 | [10.5281/zenodo.24452577](https://doi.org/10.5281/zenodo.24452577) |
 
+## Authors
+
+Pat Leslie, Marija Taflaga, Kenneth Benoit, Rohan Alexander, Keith Dowding and Guangnan Zhu
+(maintainer).
+
 ## Citation
 
 To cite ausparl in publications, run:
@@ -157,6 +168,9 @@ To cite ausparl in publications, run:
 ```r
 citation("ausparl")
 ```
+
+The citation records the package version and the database version it pins, with the
+database's Zenodo DOI. Report the `schema_version` and `built_at` from `db_info()` as well.
 
 ## License
 

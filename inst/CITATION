@@ -1,8 +1,31 @@
+year <- if (is.null(meta$Date)) format(Sys.Date(), "%Y") else sub("-.*", "", meta$Date)
+data_version <- meta$`Config/ausparl/data_version`
+data_doi <- paste0("10.5281/zenodo.", meta$`Config/ausparl/zenodo_record`)
+
+authors <- c(
+  person("Pat", "Leslie", comment = c(ORCID = "0000-0002-9218-8981")),
+  person("Marija", "Taflaga"),
+  person("Kenneth", "Benoit"),
+  person("Rohan", "Alexander"),
+  person("Keith", "Dowding"),
+  person("Guangnan", "Zhu")
+)
+
 bibentry(
   bibtype = "Manual",
-  title = "ausparl: Query the Australian Hansard Database",
-  author = person("Guangnan", "Zhu"),
-  year = "2026",
-  note = "R package version 0.1.0",
-  url = "https://github.com/Australian-Parliamentary-Speech/ausparl"
+  header = "To cite ausparl in publications, use:",
+  title = "{ausparl}: Query the Australian Parliamentary Hansard Database",
+  author = authors,
+  year = year,
+  note = paste0(
+    "R package version ", meta$Version, ", using Hansard database version ", data_version,
+    " (https://doi.org/", data_doi, ")"
+  ),
+  url = "https://github.com/Australian-Parliamentary-Speech/ausparl",
+  textVersion = paste0(
+    "Leslie, P., Taflaga, M., Benoit, K., Alexander, R., Dowding, K. and Zhu, G. (", year, "). ",
+    "ausparl: Query the Australian Parliamentary Hansard Database. R package version ",
+    meta$Version, ", using Hansard database version ", data_version, " (https://doi.org/",
+    data_doi, "). https://github.com/Australian-Parliamentary-Speech/ausparl"
+  )
 )

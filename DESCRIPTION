@@ -1,15 +1,23 @@
 Package: ausparl
 Title: Query the Australian Parliamentary Hansard Database
 Version: 0.1.0
-Authors@R:
+Authors@R: c(
+    person("Pat", "Leslie", email = "patrick.leslie@anu.edu.au", role = "aut",
+           comment = c(ORCID = "0000-0002-9218-8981")),
+    person("Marija", "Taflaga", role = "aut"),
+    person("Kenneth", "Benoit", role = "aut"),
+    person("Rohan", "Alexander", role = "aut"),
+    person("Keith", "Dowding", role = "aut"),
     person("Guangnan", "Zhu", email = "Guangnan.Zhu@anu.edu.au", role = c("aut", "cre"))
+  )
 Description: Basic, reproducible query access to the pre-built Australian
     Hansard 'DuckDB' database: filtered access to sittings, speeches and
     members, full-text term search, date-scoped context joins, activity
     summaries, and hand-off to text analysis tools. The database is opened read-only and is not shipped with
     the package; a small sample database is bundled for examples and tests.
 License: GPL (>= 3)
-URL: https://github.com/Australian-Parliamentary-Speech/ausparl
+URL: https://github.com/Australian-Parliamentary-Speech/ausparl,
+    https://australian-parliamentary-speech.github.io/ausparl/
 BugReports: https://github.com/Australian-Parliamentary-Speech/ausparl/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
