@@ -38,6 +38,14 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="ausparl-development-version">ausparl (development version)<a class="anchor" aria-label="anchor" href="#ausparl-development-version"></a></h2>
+<ul><li>
+<code>db_download(background = TRUE)</code> downloads the database in the background, so you can keep working: as a background job in RStudio, or in a separate R process elsewhere.</li>
+<li>
+<code><a href="../reference/db_download.html">db_download()</a></code> keeps a lock file next to the partial download, so a second download into the same place cannot corrupt it. Calling <code><a href="../reference/db_download.html">db_download()</a></code> while one runs reports its progress.</li>
+<li>In a background job, <code><a href="../reference/db_download.html">db_download()</a></code> shows curl’s progress bar, which it otherwise shows only in interactive sessions.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="ausparl-011">ausparl 0.1.1<a class="anchor" aria-label="anchor" href="#ausparl-011"></a></h2>
 <ul><li>Added authors: Pat Leslie, Marija Taflaga, Kenneth Benoit, Rohan Alexander and Keith Dowding, alongside Guangnan Zhu. Pat Leslie is now the maintainer.</li>
 <li>Tests pass with duckdb 2.x, which keeps one database instance per file: the raw test connection opens its own copy of the sample. <code><a href="../reference/db_connect.html">db_connect()</a></code> explains the error duckdb 2.x gives when another connection holds the file with different settings.</li>

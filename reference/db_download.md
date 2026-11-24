@@ -9,7 +9,7 @@ only once its MD5 checksum matches the one Zenodo lists.
 ## Usage
 
 ``` r
-db_download(force = FALSE, dir = NULL)
+db_download(force = FALSE, dir = NULL, background = FALSE)
 ```
 
 ## Arguments
@@ -24,9 +24,17 @@ db_download(force = FALSE, dir = NULL)
   A directory to install the database in, as a single string. `NULL`
   (the default) uses the ausparl user data directory.
 
+- background:
+
+  If `TRUE`, run the download in the background (an RStudio background
+  job, or a separate R process) and return straight away. See the
+  section "In the background".
+
 ## Value
 
-The path of the installed database file, invisibly.
+The path of the installed database file, invisibly. With
+`background = TRUE`, the path it will be installed at, returned before
+the download finishes.
 
 ## Details
 
@@ -45,6 +53,25 @@ does not look there by itself: open that copy with
 `db_connect(path = file.path(dir, "hansard.duckdb"))` or by setting
 `AUSPARL_DB` to it. A verified copy of the same database version already
 in `dir` is reused; a copy of another version is replaced.
+
+**In the background.** With `background = TRUE` the download runs
+outside your R session, so you can keep working while it runs. In
+RStudio it runs as a background job, which shows its progress in the
+Background Jobs pane. Elsewhere (Positron, R in a terminal) it runs in a
+separate R process that writes its progress to a log file, whose path is
+printed; that process keeps going if you close your R session. Either
+way the download is the same: it resumes, is checksum-verified, and is
+installed in the same place. When it has finished, connect with
+[`db_connect()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_connect.md)
+as usual.
+
+**One download at a time.** While a download runs, a lock file
+(`hansard.duckdb.lock`) sits next to the partial download. Calling
+`db_download()` again for the same place meanwhile is an error that
+reports how much has been downloaded so far. A lock left by a download
+that was killed is removed automatically when it was made on the same
+computer; on Windows, or for a lock made on another computer (for
+example in a synced folder), the error says which file to delete.
 
 [`db_connect()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_connect.md)
 never downloads anything itself. Each ausparl release pins exactly one
@@ -70,5 +97,8 @@ db_disconnect()
 # Or into a folder of your project, then open it by path.
 path <- db_download(dir = "dataset")
 db_connect(path = path)
+
+# In the background, so you can keep working; connect once it has finished.
+db_download(background = TRUE)
 } # }
 ```

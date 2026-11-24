@@ -53,7 +53,7 @@ only once its MD5 checksum matches the one Zenodo lists.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">db_download</span><span class="op">(</span>force <span class="op">=</span> <span class="cn">FALSE</span>, dir <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">db_download</span><span class="op">(</span>force <span class="op">=</span> <span class="cn">FALSE</span>, dir <span class="op">=</span> <span class="cn">NULL</span>, background <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -68,10 +68,16 @@ only once its MD5 checksum matches the one Zenodo lists.</p>
 <dd><p>A directory to install the database in, as a single string. <code>NULL</code> (the default)
 uses the ausparl user data directory.</p></dd>
 
+
+<dt id="arg-background">background<a class="anchor" aria-label="anchor" href="#arg-background"></a></dt>
+<dd><p>If <code>TRUE</code>, run the download in the background (an RStudio background job,
+or a separate R process) and return straight away. See the section "In the background".</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>The path of the installed database file, invisibly.</p>
+    <p>The path of the installed database file, invisibly. With <code>background = TRUE</code>, the
+path it will be installed at, returned before the download finishes.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -85,6 +91,19 @@ folder. <code><a href="db_connect.html">db_connect()</a></code> does not look th
 <code>db_connect(path = file.path(dir, "hansard.duckdb"))</code> or by setting <code>AUSPARL_DB</code> to it. A
 verified copy of the same database version already in <code>dir</code> is reused; a copy of another
 version is replaced.</p>
+<p><strong>In the background.</strong> With <code>background = TRUE</code> the download runs outside your R session, so
+you can keep working while it runs. In RStudio it runs as a background job, which shows its
+progress in the Background Jobs pane. Elsewhere (Positron, R in a terminal) it runs in a
+separate R process that writes its progress to a log file, whose path is printed; that
+process keeps going if you close your R session. Either way the download is the same: it
+resumes, is checksum-verified, and is installed in the same place. When it has finished,
+connect with <code><a href="db_connect.html">db_connect()</a></code> as usual.</p>
+<p><strong>One download at a time.</strong> While a download runs, a lock file (<code>hansard.duckdb.lock</code>) sits
+next to the partial download. Calling <code>db_download()</code> again for the same place meanwhile is
+an error that reports how much has been downloaded so far. A lock left by a download that
+was killed is removed automatically when it was made on the same computer; on Windows, or
+for a lock made on another computer (for example in a synced folder), the error says which
+file to delete.</p>
 <p><code><a href="db_connect.html">db_connect()</a></code> never downloads anything itself. Each ausparl release pins exactly one
 database version, so an older ausparl never fetches a newer database it cannot read. To use
 a different database version, install the ausparl release that pins it.</p>
@@ -106,6 +125,9 @@ a different database version, install the ausparl release that pins it.</p>
 <span class="r-in"><span><span class="co"># Or into a folder of your project, then open it by path.</span></span></span>
 <span class="r-in"><span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu">db_download</span><span class="op">(</span>dir <span class="op">=</span> <span class="st">"dataset"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="db_connect.html">db_connect</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">path</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># In the background, so you can keep working; connect once it has finished.</span></span></span>
+<span class="r-in"><span><span class="fu">db_download</span><span class="op">(</span>background <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

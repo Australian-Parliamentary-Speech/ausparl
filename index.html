@@ -55,6 +55,7 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="ausparl">ausparl<a class="anchor" aria-label="anchor" href="#ausparl"></a>
 </h1></div>
+<p><a href="https://doi.org/10.5281/zenodo.24491241" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.24491241.svg" alt="DOI"></a></p>
 <p>Query the Australian Hansard database from R.</p>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
@@ -90,6 +91,7 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Australian-Parliamentary-Speech/ausparl" class="external-link">ausparl</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/db_download.html">db_download</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/db_connect.html">db_connect</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><strong>Keep working while it downloads.</strong> <code>db_download(background = TRUE)</code> runs the download in the background: as a job in RStudio’s Background Jobs pane, or elsewhere in a separate R process that keeps going if you close R. Connect once it has finished.</p>
 <p><strong>Download it into a folder of your own</strong>, such as the <code>dataset/</code> folder of a clone of this repository, and open it by path:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/db_download.html">db_download</a></span><span class="op">(</span>dir <span class="op">=</span> <span class="st">"dataset"</span><span class="op">)</span></span>
@@ -213,28 +215,33 @@
 <p>Each ausparl release uses one database version, and <code><a href="reference/db_download.html">db_download()</a></code> installs exactly that version.</p>
 <table class="table">
 <colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
+<col width="25%">
+<col width="25%">
+<col width="25%">
+<col width="25%">
 </colgroup>
 <thead><tr>
 <th>ausparl</th>
+<th>Package DOI</th>
 <th>Database version</th>
-<th>Zenodo DOI</th>
+<th>Database DOI</th>
 </tr></thead>
 <tbody>
 <tr>
 <td>0.1.1</td>
+<td><a href="https://doi.org/10.5281/zenodo.24491242" class="external-link">10.5281/zenodo.24491242</a></td>
 <td>7.0.0-20261123</td>
 <td><a href="https://doi.org/10.5281/zenodo.24452577" class="external-link">10.5281/zenodo.24452577</a></td>
 </tr>
 <tr>
 <td>0.1.0</td>
+<td>none</td>
 <td>7.0.0-20261123</td>
 <td><a href="https://doi.org/10.5281/zenodo.24452577" class="external-link">10.5281/zenodo.24452577</a></td>
 </tr>
 </tbody>
 </table>
+<p>Each release from 0.1.1 is archived on Zenodo with its own DOI. <a href="https://doi.org/10.5281/zenodo.24491241" class="external-link">10.5281/zenodo.24491241</a> covers all versions and always resolves to the latest.</p>
 </div>
 <div class="section level2">
 <h2 id="authors">Authors<a class="anchor" aria-label="anchor" href="#authors"></a>
@@ -246,10 +253,10 @@
 </h2>
 <p>If you use ausparl, please cite the version you used, and the database version it pins. For this release:</p>
 <blockquote>
-<p>Leslie, P., Taflaga, M., Benoit, K., Alexander, R., Dowding, K. and Zhu, G. (2026). ausparl: Query the Australian Parliamentary Hansard Database. R package version 0.1.1, using Hansard database version 7.0.0-20261123 (<a href="https://doi.org/10.5281/zenodo.24452577" class="external-link uri">https://doi.org/10.5281/zenodo.24452577</a>). <a href="https://github.com/Australian-Parliamentary-Speech/ausparl" class="external-link uri">https://github.com/Australian-Parliamentary-Speech/ausparl</a></p>
+<p>Leslie, P., Taflaga, M., Benoit, K., Alexander, R., Dowding, K. and Zhu, G. (2026). ausparl: Query the Australian Parliamentary Hansard Database. R package version 0.1.1. <a href="https://doi.org/10.5281/zenodo.24491242" class="external-link uri">https://doi.org/10.5281/zenodo.24491242</a>. Using Hansard database version 7.0.0-20261123 (<a href="https://doi.org/10.5281/zenodo.24452577" class="external-link uri">https://doi.org/10.5281/zenodo.24452577</a>).</p>
 </blockquote>
 <p>In R, <code>citation("ausparl")</code> gives the same citation for the version you have installed, with a BibTeX entry (<code>toBibtex(citation("ausparl"))</code>). GitHub’s <em>Cite this repository</em> button, built from <a href="CITATION.cff"><code>CITATION.cff</code></a>, gives it in APA and BibTeX.</p>
-<p>The citation records the package version and the database version it pins, with the database’s Zenodo DOI. Report the <code>schema_version</code> and <code>built_at</code> from <code><a href="reference/db_info.html">db_info()</a></code> as well.</p>
+<p>For another version, find its DOI in the table under <a href="#versions">Versions</a>, or on <a href="https://doi.org/10.5281/zenodo.24491241" class="external-link">Zenodo</a>. The citation records the package version and the database version it pins, with the database’s Zenodo DOI. Report the <code>schema_version</code> and <code>built_at</code> from <code><a href="reference/db_info.html">db_info()</a></code> as well.</p>
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>

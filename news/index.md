@@ -1,5 +1,20 @@
 # Changelog
 
+## ausparl (development version)
+
+- `db_download(background = TRUE)` downloads the database in the
+  background, so you can keep working: as a background job in RStudio,
+  or in a separate R process elsewhere.
+- [`db_download()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_download.md)
+  keeps a lock file next to the partial download, so a second download
+  into the same place cannot corrupt it. Calling
+  [`db_download()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_download.md)
+  while one runs reports its progress.
+- In a background job,
+  [`db_download()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_download.md)
+  shows curl’s progress bar, which it otherwise shows only in
+  interactive sessions.
+
 ## ausparl 0.1.1
 
 - Added authors: Pat Leslie, Marija Taflaga, Kenneth Benoit, Rohan

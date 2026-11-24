@@ -1,5 +1,7 @@
 # ausparl
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24491241.svg)](https://doi.org/10.5281/zenodo.24491241)
+
 Query the Australian Hansard database from R.
 
 ## Overview
@@ -60,6 +62,11 @@ library(ausparl)
 db_download()
 db_connect()
 ```
+
+**Keep working while it downloads.** `db_download(background = TRUE)`
+runs the download in the background: as a job in RStudio’s Background
+Jobs pane, or elsewhere in a separate R process that keeps going if you
+close R. Connect once it has finished.
 
 **Download it into a folder of your own**, such as the `dataset/` folder
 of a clone of this repository, and open it by path:
@@ -179,10 +186,14 @@ Each ausparl release uses one database version, and
 [`db_download()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_download.md)
 installs exactly that version.
 
-| ausparl | Database version | Zenodo DOI |
-|----|----|----|
-| 0.1.1 | 7.0.0-20261123 | [10.5281/zenodo.24452577](https://doi.org/10.5281/zenodo.24452577) |
-| 0.1.0 | 7.0.0-20261123 | [10.5281/zenodo.24452577](https://doi.org/10.5281/zenodo.24452577) |
+| ausparl | Package DOI | Database version | Database DOI |
+|----|----|----|----|
+| 0.1.1 | [10.5281/zenodo.24491242](https://doi.org/10.5281/zenodo.24491242) | 7.0.0-20261123 | [10.5281/zenodo.24452577](https://doi.org/10.5281/zenodo.24452577) |
+| 0.1.0 | none | 7.0.0-20261123 | [10.5281/zenodo.24452577](https://doi.org/10.5281/zenodo.24452577) |
+
+Each release from 0.1.1 is archived on Zenodo with its own DOI.
+[10.5281/zenodo.24491241](https://doi.org/10.5281/zenodo.24491241)
+covers all versions and always resolves to the latest.
 
 ## Authors
 
@@ -196,9 +207,9 @@ version it pins. For this release:
 
 > Leslie, P., Taflaga, M., Benoit, K., Alexander, R., Dowding, K. and
 > Zhu, G. (2026). ausparl: Query the Australian Parliamentary Hansard
-> Database. R package version 0.1.1, using Hansard database version
-> 7.0.0-20261123 (<https://doi.org/10.5281/zenodo.24452577>).
-> <https://github.com/Australian-Parliamentary-Speech/ausparl>
+> Database. R package version 0.1.1.
+> <https://doi.org/10.5281/zenodo.24491242>. Using Hansard database
+> version 7.0.0-20261123 (<https://doi.org/10.5281/zenodo.24452577>).
 
 In R, `citation("ausparl")` gives the same citation for the version you
 have installed, with a BibTeX entry (`toBibtex(citation("ausparl"))`).
@@ -206,9 +217,11 @@ GitHub’s *Cite this repository* button, built from
 [`CITATION.cff`](https://australian-parliamentary-speech.github.io/ausparl/CITATION.cff),
 gives it in APA and BibTeX.
 
-The citation records the package version and the database version it
-pins, with the database’s Zenodo DOI. Report the `schema_version` and
-`built_at` from
+For another version, find its DOI in the table under
+[Versions](#versions), or on
+[Zenodo](https://doi.org/10.5281/zenodo.24491241). The citation records
+the package version and the database version it pins, with the
+database’s Zenodo DOI. Report the `schema_version` and `built_at` from
 [`db_info()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_info.md)
 as well.
 

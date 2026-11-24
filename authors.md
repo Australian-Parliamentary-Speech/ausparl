@@ -24,7 +24,7 @@ Leslie, P., Taflaga, M., Benoit, K., Alexander, R., Dowding, K. and Zhu,
 G. (2026). ausparl: Query the Australian Parliamentary Hansard Database.
 R package version 0.1.1, using Hansard database version 7.0.0-20261123
 (https://doi.org/10.5281/zenodo.24452577).
-https://github.com/Australian-Parliamentary-Speech/ausparl
+https://doi.org/10.5281/zenodo.24491241
 
     @Manual{,
       title = {{ausparl}: Query the Australian Parliamentary Hansard Database},
@@ -32,4 +32,5 @@ https://github.com/Australian-Parliamentary-Speech/ausparl
       year = {2026},
       note = {R package version 0.1.1, using Hansard database version 7.0.0-20261123 (https://doi.org/10.5281/zenodo.24452577)},
       url = {https://github.com/Australian-Parliamentary-Speech/ausparl},
+      doi = {10.5281/zenodo.24491241},
     }
