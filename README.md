@@ -59,7 +59,8 @@ background: as a job in RStudio's Background Jobs pane, or elsewhere in a separa
 that keeps going if you close R. Connect once it has finished.
 
 **Download it into a folder of your own**, such as the `dataset/` folder of a clone of this
-repository, and open it by path:
+repository. From that folder (or the one above `dataset/`), `db_connect()` finds it by itself;
+from anywhere else, open it by path:
 
 ```r
 db_download(dir = "dataset")
@@ -75,7 +76,8 @@ AUSPARL_DB=/path/to/hansard.duckdb
 
 You can open that file with `usethis::edit_r_environ()`; restart R after saving it. A `path`
 you pass comes first, then `AUSPARL_DB`, then the copy `db_download()` installed in the user
-data directory.
+data directory, then the full database you opened earlier in the session, then
+`hansard.duckdb` in the working directory or its `dataset/` folder.
 
 **Try it with the bundled sample** (eight sitting days, no download needed):
 

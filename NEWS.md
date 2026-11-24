@@ -1,3 +1,10 @@
+# ausparl (development version)
+
+* `db_connect()` with no arguments now also finds the full database used earlier in the
+  session (as `db_info()` and the query functions already did), and `hansard.duckdb` in the
+  working directory or its `dataset/` folder, where `db_download(dir = )` puts it. It says
+  which file it opened, and the "no database" error explains where such copies are found.
+
 # ausparl 0.1.2
 
 * The "Getting started" vignette is held back from this release while it is revised.

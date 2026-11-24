@@ -17,8 +17,9 @@
 #' `db_connect(sample = TRUE)`.
 #'
 #' [db_connect()] chooses the file in this order: an explicit `path` (or `sample = TRUE`), then
-#' the `AUSPARL_DB` environment variable, then the copy installed by [db_download()]. Query
-#' functions connect on first use if no connection is open.
+#' the `AUSPARL_DB` environment variable, then the copy installed by [db_download()], then the
+#' full database used earlier in the session, then `hansard.duckdb` in the working directory or
+#' its `dataset/` folder. Query functions connect on first use if no connection is open.
 #'
 #' @section Functions by task:
 #' * **Connection:** [db_download()], [db_connect()], [db_disconnect()], [db_info()],

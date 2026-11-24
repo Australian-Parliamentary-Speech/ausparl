@@ -33,8 +33,9 @@ move it), and \code{\link[=db_connect]{db_connect()}} with no arguments then ope
 
 With \code{dir}, the database is installed directly in that directory as \code{hansard.duckdb} (the
 directory is created if needed), for example \code{db_download(dir = "dataset")} in a project
-folder. \code{\link[=db_connect]{db_connect()}} does not look there by itself: open that copy with
-\code{db_connect(path = file.path(dir, "hansard.duckdb"))} or by setting \code{AUSPARL_DB} to it. A
+folder. \code{\link[=db_connect]{db_connect()}} with no arguments finds that copy only when it is in the working
+directory or its \verb{dataset/} folder, or after it was opened once in the session; elsewhere,
+open it with \code{db_connect(path = file.path(dir, "hansard.duckdb"))} or set \code{AUSPARL_DB}. A
 verified copy of the same database version already in \code{dir} is reused; a copy of another
 version is replaced.
 

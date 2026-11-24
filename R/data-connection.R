@@ -12,10 +12,16 @@ builder_version_columns <- c("ausparl_version", "pipeline_version")
 #' Any connection already open is closed first. The database file is never written to.
 #'
 #' The file is chosen as follows. An explicit `path` or `sample = TRUE` is used as given
-#' (passing both is an error). With neither, the `AUSPARL_DB` environment variable is used.
-#' Without that either, the copy installed by [db_download()] for the database version this
-#' release of ausparl pins is used, and a message says which version was opened.
-#' `db_connect()` never downloads anything itself.
+#' (passing both is an error). With neither, the first of these that exists is opened:
+#' 1. the file named by the `AUSPARL_DB` environment variable;
+#' 2. the copy installed by [db_download()] in the user data directory, for the database
+#'    version this release of ausparl pins;
+#' 3. the full database opened earlier in this R session (never the bundled sample);
+#' 4. `hansard.duckdb` in the working directory, then in its `dataset/` folder, as
+#'    `db_download(dir = ".")` and `db_download(dir = "dataset")` leave it.
+#'
+#' A message says which file was opened in cases 2 to 4. `db_connect()` never downloads
+#' anything itself.
 #'
 #' On connect the DuckDB full-text-search extension (`fts`) is loaded. If it is not installed
 #' yet, it is installed once into `tools::R_user_dir("ausparl", "cache")`, which needs network
@@ -223,6 +229,23 @@ db_info <- function(con = db_con()) {
 
 # ---- internals ---------------------------------------------------------------------------------
 
+# With no path, AUSPARL_DB or downloaded copy: the full database used earlier in this session
+# (never the bundled sample), then hansard.duckdb in the working directory or its dataset/.
+find_nearby_db <- function() {
+  sample <- normalizePath(
+    system.file("extdata", "ausparl-sample.duckdb", package = "ausparl"),
+    mustWork = FALSE
+  )
+  last <- .ausparl$last_path
+  candidates <- c(
+    if (!is.null(last) && !identical(normalizePath(last, mustWork = FALSE), sample)) last,
+    file.path(getwd(), db_file_name),
+    file.path(getwd(), "dataset", db_file_name)
+  )
+  hit <- candidates[file.exists(candidates)]
+  if (length(hit)) hit[[1]] else NULL
+}
+
 resolve_db_path <- function(path, sample, call) {
   if (!rlang::is_bool(sample)) {
     abort_input("{.arg sample} must be {.code TRUE} or {.code FALSE}.", call = call)
@@ -244,15 +267,22 @@ resolve_db_path <- function(path, sample, call) {
   } else {
     data_version <- pinned_release()$data_version
     path <- cached_db_path(data_version)
-    if (is.null(path)) {
-      abort_db(c(
-        "No database to connect to.",
-        "i" = "Pass {.arg path}, set the {.envvar AUSPARL_DB} environment variable to your
-               {.file hansard.duckdb}, download the database once with {.code db_download()},
-               or use {.code db_connect(sample = TRUE)}."
-      ), call = call)
+    if (!is.null(path)) {
+      cli::cli_inform("Opening the downloaded database {.val {data_version}}.")
+    } else {
+      path <- find_nearby_db()
+      if (is.null(path)) {
+        abort_db(c(
+          "No database to connect to.",
+          "i" = "Pass {.arg path}, set the {.envvar AUSPARL_DB} environment variable to your
+                 {.file hansard.duckdb}, download the database once with {.code db_download()},
+                 or use {.code db_connect(sample = TRUE)}.",
+          "i" = "A copy downloaded with {.code db_download(dir = )} is found only when it is in
+                 the working directory or its {.file dataset} folder; otherwise pass {.arg path}."
+        ), call = call)
+      }
+      cli::cli_inform("Opening {.file {path}}.")
     }
-    cli::cli_inform("Opening the downloaded database {.val {data_version}}.")
   }
   if (!file.exists(path)) {
     abort_not_found(c(
