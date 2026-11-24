@@ -1,4 +1,4 @@
-# ausparl (development version)
+# ausparl 0.1.1
 
 * Added authors: Pat Leslie, Marija Taflaga, Kenneth Benoit, Rohan Alexander and Keith
   Dowding, alongside Guangnan Zhu. Pat Leslie is now the maintainer.
@@ -6,6 +6,8 @@
   connection opens its own copy of the sample. `db_connect()` explains the error duckdb 2.x
   gives when another connection holds the file with different settings.
 * Added `CITATION.cff` and a suggested citation in the README.
+* The worked example in `example/` shows how to connect: `db_connect(sample = TRUE)` for the
+  bundled sample, or `db_connect(path = )` for a full copy.
 * New vignette, `vignette("database")`: a guide to the tables, identifiers, turn types, speaker
   resolution, date-scoped context views and provenance of the Hansard database. It runs on the
   bundled sample database.
