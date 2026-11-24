@@ -14,6 +14,12 @@
   [`db_download()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_download.md)
   shows curl’s progress bar, which it otherwise shows only in
   interactive sessions.
+- [`db_download()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_download.md)
+  no longer deletes the download when its checksum cannot be computed
+  (the file is missing or unreadable, for example because a second
+  download into the same place removed it). It keeps the partial file
+  and says how to resume. It also says that the checksum step takes
+  about a minute.
 
 ## ausparl 0.1.1
 

@@ -44,6 +44,8 @@
 <li>
 <code><a href="../reference/db_download.html">db_download()</a></code> keeps a lock file next to the partial download, so a second download into the same place cannot corrupt it. Calling <code><a href="../reference/db_download.html">db_download()</a></code> while one runs reports its progress.</li>
 <li>In a background job, <code><a href="../reference/db_download.html">db_download()</a></code> shows curl’s progress bar, which it otherwise shows only in interactive sessions.</li>
+<li>
+<code><a href="../reference/db_download.html">db_download()</a></code> no longer deletes the download when its checksum cannot be computed (the file is missing or unreadable, for example because a second download into the same place removed it). It keeps the partial file and says how to resume. It also says that the checksum step takes about a minute.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="ausparl-011">ausparl 0.1.1<a class="anchor" aria-label="anchor" href="#ausparl-011"></a></h2>
