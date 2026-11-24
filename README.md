@@ -33,7 +33,7 @@ remotes::install_github("Australian-Parliamentary-Speech/ausparl")
 To install a particular release, name its tag:
 
 ```r
-remotes::install_github("Australian-Parliamentary-Speech/ausparl@v0.1.1")
+remotes::install_github("Australian-Parliamentary-Speech/ausparl@v0.1.2")
 ```
 
 This installs the package and the packages it depends on, including duckdb and quanteda.
@@ -116,9 +116,8 @@ get_speeches(member = howard, limit = 20) |>
 db_disconnect()
 ```
 
-Two vignettes go further: `vignette("ausparl")` walks through a full analysis, and
 `vignette("database")` describes the database itself: its tables, identifiers, turn types,
-speaker matching and provenance. The package help page, `?ausparl`, lists the functions by task
+speaker matching and provenance. For a first analysis, see the worked example below. The package help page, `?ausparl`, lists the functions by task
 and the package options.
 
 The documentation is also online at
@@ -177,8 +176,8 @@ If you use ausparl, please cite the version you used, and the database version i
 For this release:
 
 > Leslie, P., Taflaga, M., Benoit, K., Alexander, R., Dowding, K. and Zhu, G. (2026).
-> ausparl: Query the Australian Parliamentary Hansard Database. R package version 0.1.1.
-> <https://doi.org/10.5281/zenodo.24491242>. Using Hansard database version 7.0.0-20261123
+> ausparl: Query the Australian Parliamentary Hansard Database. R package version 0.1.2.
+> <https://doi.org/10.5281/zenodo.24491241>. Using Hansard database version 7.0.0-20261123
 > (<https://doi.org/10.5281/zenodo.24452577>).
 
 In R, `citation("ausparl")` gives the same citation for the version you have installed, with

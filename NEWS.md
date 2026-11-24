@@ -1,5 +1,7 @@
-# ausparl (development version)
+# ausparl 0.1.2
 
+* The "Getting started" vignette is held back from this release while it is revised.
+  `vignette("database")` remains; the worked example in `example/` covers a first analysis.
 * `db_download(background = TRUE)` downloads the database in the background, so you can keep
   working: as a background job in RStudio, or in a separate R process elsewhere.
 * `db_download()` keeps a lock file next to the partial download, so a second download into the

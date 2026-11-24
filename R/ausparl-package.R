@@ -7,8 +7,8 @@
 #' Parliamentary Handbook. Queries run inside the database and only their results come back into
 #' R; the database is opened read-only and never loaded into memory.
 #'
-#' Start with `vignette("ausparl")` for a worked analysis, and `vignette("database")` for a guide
-#' to the tables, identifiers and conventions of the database.
+#' Start with `vignette("database")`, a guide to the tables, identifiers and conventions of the
+#' database.
 #'
 #' @section Getting the database:
 #' The full database (about 9.5 GB) is not installed with the package. [db_download()] fetches
