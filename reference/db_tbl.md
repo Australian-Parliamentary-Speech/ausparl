@@ -31,7 +31,7 @@ A lazy `tbl`.
 db_connect(sample = TRUE)
 db_tbl("sittings")
 #> # A query:  ?? x 4
-#> # Database: DuckDB 2.0.0 [unknown@Linux 7.0.0-1020-azure:R 4.6.2//home/runner/work/_temp/Library/ausparl/extdata/ausparl-sample.duckdb]
+#> # Database: DuckDB 2.0.1 [unknown@Linux 7.0.0-1020-azure:R 4.6.2//home/runner/work/_temp/Library/ausparl/extdata/ausparl-sample.duckdb]
 #>   sitting_id        chamber date       parliament_id
 #>   <chr>             <chr>   <date>             <int>
 #> 1 house_1902-10-10  house   1902-10-10             1
