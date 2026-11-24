@@ -24,6 +24,21 @@ db_file_name <- "hansard.duckdb"
 #' verified copy of the same database version already in `dir` is reused; a copy of another
 #' version is replaced.
 #'
+#' **In the background.** With `background = TRUE` the download runs outside your R session, so
+#' you can keep working while it runs. In RStudio it runs as a background job, which shows its
+#' progress in the Background Jobs pane. Elsewhere (Positron, R in a terminal) it runs in a
+#' separate R process that writes its progress to a log file, whose path is printed; that
+#' process keeps going if you close your R session. Either way the download is the same: it
+#' resumes, is checksum-verified, and is installed in the same place. When it has finished,
+#' connect with [db_connect()] as usual.
+#'
+#' **One download at a time.** While a download runs, a lock file (`hansard.duckdb.lock`) sits
+#' next to the partial download. Calling `db_download()` again for the same place meanwhile is
+#' an error that reports how much has been downloaded so far. A lock left by a download that
+#' was killed is removed automatically when it was made on the same computer; on Windows, or
+#' for a lock made on another computer (for example in a synced folder), the error says which
+#' file to delete.
+#'
 #' `db_connect()` never downloads anything itself. Each ausparl release pins exactly one
 #' database version, so an older ausparl never fetches a newer database it cannot read. To use
 #' a different database version, install the ausparl release that pins it.
@@ -31,7 +46,10 @@ db_file_name <- "hansard.duckdb"
 #' @param force If `TRUE`, download again even when a verified copy is already installed.
 #' @param dir A directory to install the database in, as a single string. `NULL` (the default)
 #'   uses the ausparl user data directory.
-#' @return The path of the installed database file, invisibly.
+#' @param background If `TRUE`, run the download in the background (an RStudio background job,
+#'   or a separate R process) and return straight away. See the section "In the background".
+#' @return The path of the installed database file, invisibly. With `background = TRUE`, the
+#'   path it will be installed at, returned before the download finishes.
 #' @seealso [db_connect()], [db_info()]
 #' @export
 #' @examples
@@ -45,8 +63,11 @@ db_file_name <- "hansard.duckdb"
 #' # Or into a folder of your project, then open it by path.
 #' path <- db_download(dir = "dataset")
 #' db_connect(path = path)
+#'
+#' # In the background, so you can keep working; connect once it has finished.
+#' db_download(background = TRUE)
 #' }
-db_download <- function(force = FALSE, dir = NULL) {
+db_download <- function(force = FALSE, dir = NULL, background = FALSE) {
   call <- rlang::current_env()
   if (!is.null(dir) && (!rlang::is_string(dir) || !nzchar(dir))) {
     abort_input(c(
@@ -57,6 +78,9 @@ db_download <- function(force = FALSE, dir = NULL) {
   }
   if (!rlang::is_bool(force)) {
     abort_input("{.arg force} must be {.code TRUE} or {.code FALSE}.", call = call)
+  }
+  if (!rlang::is_bool(background)) {
+    abort_input("{.arg background} must be {.code TRUE} or {.code FALSE}.", call = call)
   }
   if (!is.null(dir) && file.exists(dir) && !dir.exists(dir)) {
     abort_input(c(
@@ -87,6 +111,15 @@ db_download <- function(force = FALSE, dir = NULL) {
     return(invisible(installed))
   }
 
+  target <- if (is.null(dir)) file.path(data_dir(), pin$data_version) else dir
+  dest <- file.path(target, db_file_name)
+  check_download_lock(dest, call = call)
+
+  if (background) {
+    make_target_dir(target, call = call)
+    return(start_background_download(force, dir, pin, dest, call = call))
+  }
+
   file <- record_db_file(zenodo_record_json(pin$record, call = call), pin, call = call)
   cli::cli_inform(c(
     "i" = "ausparl {pin$version} uses database {.val {pin$data_version}} (Zenodo record
@@ -95,15 +128,9 @@ db_download <- function(force = FALSE, dir = NULL) {
            run {.code db_download()} again with the same arguments to resume."
   ))
 
-  target <- if (is.null(dir)) file.path(data_dir(), pin$data_version) else dir
-  dir.create(target, recursive = TRUE, showWarnings = FALSE)
-  if (!dir.exists(target)) {
-    abort_input(c(
-      "Could not create the directory {.file {target}}.",
-      "i" = "Check the path and that its parent directory is writable."
-    ), call = call)
-  }
-  dest <- file.path(target, db_file_name)
+  make_target_dir(target, call = call)
+  acquire_download_lock(dest, file$size)
+  on.exit(release_download_lock(dest), add = TRUE)
   part <- paste0(dest, ".part")
   marker <- paste0(dest, ".verified")
   download_file(file$url, part, call = call)
@@ -269,7 +296,7 @@ download_file <- function(url, destfile, call = rlang::caller_env()) {
   res <- tryCatch(
     curl::multi_download(
       url, destfile,
-      resume = TRUE, timeout = 0, progress = interactive(), failonerror = TRUE
+      resume = TRUE, timeout = 0, progress = show_download_progress(), failonerror = TRUE
     ),
     error = function(e) fail(conditionMessage(e))
   )

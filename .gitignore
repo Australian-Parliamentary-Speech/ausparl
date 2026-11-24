@@ -27,6 +27,16 @@ example/.gitignore
 dataset/*.duckdb
 dataset/*.part
 dataset/*.verified
+dataset/*.lock
 
 # pkgdown site
 docs/
+
+# Dropbox (the package is kept in a Dropbox folder)
+.dropbox
+.dropbox.attr
+.dropbox.cache/
+*conflicted copy*
+*Selective Sync Conflict*
+# macOS folder icon file ("Icon" + carriage return), which Dropbox can create
+Icon?

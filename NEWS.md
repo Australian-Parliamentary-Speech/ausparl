@@ -1,5 +1,11 @@
 # ausparl (development version)
 
+* `db_download(background = TRUE)` downloads the database in the background, so you can keep
+  working: as a background job in RStudio, or in a separate R process elsewhere.
+* `db_download()` keeps a lock file next to the partial download, so a second download into the
+  same place cannot corrupt it. Calling `db_download()` while one runs reports its progress.
+* In a background job, `db_download()` shows curl's progress bar, which it otherwise shows only
+  in interactive sessions.
 * `db_download()` no longer deletes the download when its checksum cannot be computed
   (the file is missing or unreadable, for example because a second download into the same
   place removed it). It keeps the partial file and says how to resume. It also says that the
