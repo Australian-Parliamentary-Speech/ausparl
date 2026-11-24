@@ -1,4 +1,4 @@
-# ausparl (development version)
+# ausparl 0.1.2
 
 * `db_download(background = TRUE)` downloads the database in the background, so you can keep
   working: as a background job in RStudio, or in a separate R process elsewhere.
