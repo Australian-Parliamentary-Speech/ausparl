@@ -63,11 +63,22 @@ db_connect <- function(path = NULL, sample = FALSE) {
       )
     )),
     error = function(e) {
+      msg <- conditionMessage(e)
+      # duckdb >= 2.0 keeps one instance per file and refuses settings it cannot apply to it.
+      hint <- if (grepl("can't be applied to the database instance", msg, fixed = TRUE)) {
+        paste(
+          "Another connection to this file is open in this R session with different settings,",
+          "or an earlier attempt to open it failed. Close that connection with",
+          "{.fn DBI::dbDisconnect}, or restart R."
+        )
+      } else {
+        "Check that the file is a DuckDB database written by DuckDB >= 1.5.5."
+      }
       # duckdb messages can contain braces, which cli would otherwise interpolate.
       abort_db(c(
         "Could not open the database at {.file {path}}.",
-        "x" = gsub("([{}])", "\\1\\1", conditionMessage(e)),
-        "i" = "Check that the file is a DuckDB database written by DuckDB >= 1.5.5."
+        "x" = gsub("([{}])", "\\1\\1", msg),
+        "i" = hint
       ), call = call)
     }
   )

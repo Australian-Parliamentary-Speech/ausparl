@@ -31,7 +31,7 @@ remotes::install_github("Australian-Parliamentary-Speech/ausparl")
 To install a particular release, name its tag:
 
 ```r
-remotes::install_github("Australian-Parliamentary-Speech/ausparl@v0.1.0")
+remotes::install_github("Australian-Parliamentary-Speech/ausparl@v0.1.1")
 ```
 
 This installs the package and the packages it depends on, including duckdb and quanteda.
@@ -110,7 +110,13 @@ get_speeches(member = howard, limit = 20) |>
 db_disconnect()
 ```
 
-The vignette walks through a full analysis: `vignette("ausparl")`.
+Two vignettes go further: `vignette("ausparl")` walks through a full analysis, and
+`vignette("database")` describes the database itself: its tables, identifiers, turn types,
+speaker matching and provenance. The package help page, `?ausparl`, lists the functions by task
+and the package options.
+
+The documentation is also online at
+<https://australian-parliamentary-speech.github.io/ausparl/>.
 
 ## Example code
 
@@ -148,15 +154,31 @@ version.
 
 | ausparl | Database version | Zenodo DOI |
 |---|---|---|
+| 0.1.1 | 7.0.0-20261123 | [10.5281/zenodo.24452577](https://doi.org/10.5281/zenodo.24452577) |
 | 0.1.0 | 7.0.0-20261123 | [10.5281/zenodo.24452577](https://doi.org/10.5281/zenodo.24452577) |
+
+## Authors
+
+Pat Leslie (maintainer), Marija Taflaga, Kenneth Benoit, Rohan Alexander, Keith Dowding and
+Guangnan Zhu.
 
 ## Citation
 
-To cite ausparl in publications, run:
+If you use ausparl, please cite the version you used, and the database version it pins.
+For this release:
 
-```r
-citation("ausparl")
-```
+> Leslie, P., Taflaga, M., Benoit, K., Alexander, R., Dowding, K. and Zhu, G. (2026).
+> ausparl: Query the Australian Parliamentary Hansard Database. R package version 0.1.1,
+> using Hansard database version 7.0.0-20261123
+> (<https://doi.org/10.5281/zenodo.24452577>).
+> <https://github.com/Australian-Parliamentary-Speech/ausparl>
+
+In R, `citation("ausparl")` gives the same citation for the version you have installed, with
+a BibTeX entry (`toBibtex(citation("ausparl"))`). GitHub's *Cite this repository* button,
+built from [`CITATION.cff`](CITATION.cff), gives it in APA and BibTeX.
+
+The citation records the package version and the database version it pins, with the
+database's Zenodo DOI. Report the `schema_version` and `built_at` from `db_info()` as well.
 
 ## License
 

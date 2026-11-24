@@ -9,3 +9,8 @@
 ^\.Rproj\.user$
 ^example$
 ^dataset$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
+^CITATION\.cff$

@@ -1,0 +1,53 @@
+# Citation metadata for ausparl. GitHub's "Cite this repository" button and Zenodo's archive
+# of each GitHub release are built from this file. Update `version` and `date-released` with
+# each release, and add the release's Zenodo DOI under `identifiers` once it is minted.
+cff-version: 1.2.0
+message: "If you use ausparl, please cite the version you used and the Hansard database version it pins."
+type: software
+title: "ausparl: Query the Australian Parliamentary Hansard Database"
+abstract: >-
+  Basic, reproducible query access to the pre-built Australian Hansard DuckDB
+  database: filtered access to sittings, speeches and members, full-text term
+  search, date-scoped context joins, activity summaries, and hand-off to text
+  analysis tools.
+authors:
+  - family-names: Leslie
+    given-names: Pat
+    orcid: "https://orcid.org/0000-0002-9218-8981"
+  - family-names: Taflaga
+    given-names: Marija
+  - family-names: Benoit
+    given-names: Kenneth
+  - family-names: Alexander
+    given-names: Rohan
+  - family-names: Dowding
+    given-names: Keith
+  - family-names: Zhu
+    given-names: Guangnan
+version: 0.1.1
+date-released: "2026-11-24"
+license: GPL-3.0-or-later
+repository-code: "https://github.com/Australian-Parliamentary-Speech/ausparl"
+url: "https://australian-parliamentary-speech.github.io/ausparl/"
+keywords:
+  - Australia
+  - parliament
+  - Hansard
+  - DuckDB
+  - R
+references:
+  - type: dataset
+    title: "Australian Parliament Hansard Database"
+    version: 7.0.0-20261123
+    doi: 10.5281/zenodo.24452577
+    authors:
+      - family-names: Leslie
+        given-names: Pat
+      - family-names: Taflaga
+        given-names: Marija
+      - family-names: Benoit
+        given-names: Kenneth
+      - family-names: Alexander
+        given-names: Rohan
+      - family-names: Dowding
+        given-names: Keith

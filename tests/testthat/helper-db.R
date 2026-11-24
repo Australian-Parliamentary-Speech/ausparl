@@ -6,10 +6,15 @@ sample_db_path <- function() {
   path
 }
 
-# A raw read-only DBI connection to the sample, independent of db_connect().
+# A raw read-only DBI connection to the sample, independent of db_connect(). It opens a temp
+# copy of the sample: duckdb >= 2.0 keeps one database instance per file and refuses a second
+# connection to it with different settings, so opening the bundled file itself fails while the
+# package connection (which sets its own config) is open on it.
 local_sample_con <- function(env = parent.frame()) {
+  path <- withr::local_tempfile(fileext = ".duckdb", .local_envir = env)
+  file.copy(sample_db_path(), path)
   con <- DBI::dbConnect(
-    duckdb::duckdb(), dbdir = sample_db_path(), read_only = TRUE, shared_home = FALSE
+    duckdb::duckdb(), dbdir = path, read_only = TRUE, shared_home = FALSE
   )
   withr::defer(DBI::dbDisconnect(con, shutdown = TRUE), envir = env)
   con

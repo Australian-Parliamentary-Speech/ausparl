@@ -1,0 +1,83 @@
+url: https://australian-parliamentary-speech.github.io/ausparl/
+
+template:
+  bootstrap: 5
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, github]
+
+articles:
+  - title: Guides
+    navbar: ~
+    contents:
+      - ausparl
+      - database
+
+reference:
+  - title: Package overview
+    contents:
+      - ausparl-package
+  - title: Connecting to the database
+    desc: Download, open and inspect the Hansard database.
+    contents:
+      - db_download
+      - db_connect
+      - db_disconnect
+      - db_info
+      - db_con
+      - db_tbl
+  - title: Speeches and search
+    desc: Turns, speeches and interjections, and full-text search over them.
+    contents:
+      - get_speeches
+      - get_speech_turns
+      - search_speeches_by_terms
+      - get_sitting_timeline
+      - get_interjections
+  - title: Members
+    contents:
+      - find_member
+      - member_profile
+  - title: Activity summaries
+    contents:
+      - member_activity
+      - party_activity
+      - parliament_summary
+  - title: Context on the day of a turn
+    desc: Add what was true of the speaker on the sitting date.
+    contents:
+      - starts_with("add_")
+  - title: Transcript tables
+    contents:
+      - get_sittings
+      - get_debates
+      - get_subdebates
+      - get_actions
+      - get_provenance
+  - title: Parliamentary Handbook tables
+    contents:
+      - get_members
+      - get_parliaments
+      - get_parties
+      - get_electorates
+      - get_elections
+      - get_parl_service
+      - get_party_service
+      - get_ministries
+      - get_ministry_records
+      - get_shadow_ministry_records
+      - get_committee_members
+      - get_presiding_officers
+      - get_occupations
+      - get_qualifications
+      - get_schools
+  - title: Filter helpers
+    contents:
+      - in_range
+      - matches_pattern
+  - title: Outputs
+    contents:
+      - as_corpus
+      - result_provenance

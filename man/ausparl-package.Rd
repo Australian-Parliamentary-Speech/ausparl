@@ -6,23 +6,124 @@
 \alias{ausparl-package}
 \title{ausparl: Query the Australian Parliamentary Hansard Database}
 \description{
-Basic, reproducible query access to the pre-built Australian Hansard 'DuckDB' database: filtered access to sittings, speeches and members, full-text term search, date-scoped context joins, activity summaries, and hand-off to text analysis tools. The database is opened read-only and is not shipped with the package; a small sample database is bundled for examples and tests.
+ausparl gives basic, reproducible query access to the Australian Parliamentary Hansard: the
+record of debates in the House of Representatives and the Senate since 1901, held in a
+pre-built DuckDB database and linked to members, parties, ministries and electorates from the
+Parliamentary Handbook. Queries run inside the database and only their results come back into
+R; the database is opened read-only and never loaded into memory.
+
+Start with \code{vignette("ausparl")} for a worked analysis, and \code{vignette("database")} for a guide
+to the tables, identifiers and conventions of the database.
 }
+\section{Getting the database}{
+
+The full database (about 9.5 GB) is not installed with the package. \code{\link[=db_download]{db_download()}} fetches
+the version this release pins from Zenodo and checks it, and \code{\link[=db_connect]{db_connect()}} then opens it with
+no arguments. A small sample database of eight sitting days is bundled for examples and tests:
+\code{db_connect(sample = TRUE)}.
+
+\code{\link[=db_connect]{db_connect()}} chooses the file in this order: an explicit \code{path} (or \code{sample = TRUE}), then
+the \code{AUSPARL_DB} environment variable, then the copy installed by \code{\link[=db_download]{db_download()}}. Query
+functions connect on first use if no connection is open.
+}
+
+\section{Functions by task}{
+
+\itemize{
+\item \strong{Connection:} \code{\link[=db_download]{db_download()}}, \code{\link[=db_connect]{db_connect()}}, \code{\link[=db_disconnect]{db_disconnect()}}, \code{\link[=db_info]{db_info()}},
+\code{\link[=db_con]{db_con()}}, \code{\link[=db_tbl]{db_tbl()}}.
+\item \strong{Speeches and search:} \code{\link[=get_speeches]{get_speeches()}} (one row per action),
+\code{\link[=get_speech_turns]{get_speech_turns()}} (consecutive actions by one speaker merged into a turn),
+\code{\link[=search_speeches_by_terms]{search_speeches_by_terms()}} (full-text search with hit counts),
+\code{\link[=get_sitting_timeline]{get_sitting_timeline()}} (a sitting in document order) and \code{\link[=get_interjections]{get_interjections()}} (who
+interrupted whom).
+\item \strong{Members:} \code{\link[=find_member]{find_member()}} to look up a \code{PHID} by name, and \code{\link[=member_profile]{member_profile()}} for
+everything recorded about one member.
+\item \strong{Activity summaries:} \code{\link[=member_activity]{member_activity()}}, \code{\link[=party_activity]{party_activity()}}, \code{\link[=parliament_summary]{parliament_summary()}}.
+\item \strong{Context on the day of a turn:} \code{\link[=add_party]{add_party()}}, \code{\link[=add_role]{add_role()}}, \code{\link[=add_government_status]{add_government_status()}},
+\code{\link[=add_electorate]{add_electorate()}}, \code{\link[=add_age]{add_age()}}, \code{\link[=add_member]{add_member()}}, \code{\link[=add_debate]{add_debate()}}.
+\item \strong{Tables:} one getter per table: \code{\link[=get_sittings]{get_sittings()}}, \code{\link[=get_debates]{get_debates()}}, \code{\link[=get_subdebates]{get_subdebates()}},
+\code{\link[=get_actions]{get_actions()}}, \code{\link[=get_members]{get_members()}}, \code{\link[=get_parliaments]{get_parliaments()}}, \code{\link[=get_parties]{get_parties()}},
+\code{\link[=get_party_service]{get_party_service()}}, \code{\link[=get_parl_service]{get_parl_service()}}, \code{\link[=get_electorates]{get_electorates()}}, \code{\link[=get_elections]{get_elections()}},
+\code{\link[=get_ministries]{get_ministries()}}, \code{\link[=get_ministry_records]{get_ministry_records()}}, \code{\link[=get_shadow_ministry_records]{get_shadow_ministry_records()}},
+\code{\link[=get_committee_members]{get_committee_members()}}, \code{\link[=get_presiding_officers]{get_presiding_officers()}}, \code{\link[=get_occupations]{get_occupations()}},
+\code{\link[=get_qualifications]{get_qualifications()}}, \code{\link[=get_schools]{get_schools()}} and \code{\link[=get_provenance]{get_provenance()}}. Any other table or view is
+available with \code{\link[=db_tbl]{db_tbl()}}.
+\item \strong{Filter helpers:} \code{\link[=in_range]{in_range()}} and \code{\link[=matches_pattern]{matches_pattern()}}, accepted by most filter
+arguments.
+\item \strong{Outputs:} \code{\link[=as_corpus]{as_corpus()}} hands text to quanteda, and \code{\link[=result_provenance]{result_provenance()}} lists the
+source files behind a result.
+}
+}
+
+\section{Common arguments}{
+
+Most query functions share three arguments:
+\itemize{
+\item \code{collect}: \code{TRUE} (the default) returns a tibble; \code{FALSE} returns a lazy dplyr table that
+you can keep filtering, joining and summarising inside DuckDB before calling
+\code{\link[dplyr:collect]{dplyr::collect()}}.
+\item \code{limit}: the maximum number of rows to return, or \code{NULL} for no limit.
+\item \code{columns}: the columns to return, or \code{NULL} for all.
+}
+
+Chamber arguments take \code{"house"} and/or \code{"senate"}, in any case. Date bounds (\code{from}, \code{to})
+take a year (covering the whole year), a \code{Date} or a \code{"YYYY-MM-DD"} string, and are inclusive.
+}
+
+\section{Package options}{
+
+\itemize{
+\item \code{ausparl.memory_limit}: the cap on DuckDB's memory use, a size such as \code{"1.5GB"}. Default
+\code{"3GB"}. Takes effect at the next \code{\link[=db_connect]{db_connect()}}.
+\item \code{ausparl.max_rows}: the most rows a result without speech text may collect into R; a larger
+result is an error that suggests \code{collect = FALSE}. Default 2,000,000. \code{Inf} switches the
+check off.
+\item \code{ausparl.max_rows_text}: the same ceiling for results that include the speech text
+(\code{content}). Default 800,000.
+\item \code{ausparl.auto_install_fts}: whether \code{\link[=db_connect]{db_connect()}} may install DuckDB's full-text-search
+extension when it is missing (a one-off download). Default \code{TRUE}.
+}
+}
+
+\section{Environment variables}{
+
+\itemize{
+\item \code{AUSPARL_DB}: path to a \code{hansard.duckdb} file, used by \code{\link[=db_connect]{db_connect()}} when no \code{path} is
+given. Set it in \verb{~/.Renviron} to use the same copy in every session.
+\item \code{R_USER_DATA_DIR}: moves the user data directory in which \code{\link[=db_download]{db_download()}} installs the
+database by default (see \code{\link[tools:R_user_dir]{tools::R_user_dir()}}).
+}
+}
+
+\section{Versions and citation}{
+
+Each ausparl release pins exactly one database version, recorded in the package
+\code{DESCRIPTION} (\code{Config/ausparl/data_version}) and archived on Zenodo. \code{\link[=db_info]{db_info()}} reports the
+version and build time of the database you are connected to; quote them in your methods. To
+cite the package, run \code{citation("ausparl")}.
+}
+
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://github.com/Australian-Parliamentary-Speech/ausparl}
+  \item \url{https://australian-parliamentary-speech.github.io/ausparl/}
   \item Report bugs at \url{https://github.com/Australian-Parliamentary-Speech/ausparl/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Guangnan Zhu \email{Guangnan.Zhu@anu.edu.au}
+\strong{Maintainer}: Pat Leslie \email{patrick.leslie@anu.edu.au} (\href{https://orcid.org/0000-0002-9218-8981}{ORCID})
 
 Authors:
 \itemize{
+  \item Pat Leslie \email{patrick.leslie@anu.edu.au} (\href{https://orcid.org/0000-0002-9218-8981}{ORCID})
+  \item Marija Taflaga
+  \item Kenneth Benoit
+  \item Rohan Alexander
+  \item Keith Dowding
   \item Guangnan Zhu \email{Guangnan.Zhu@anu.edu.au}
 }
 
 }
-\keyword{internal}

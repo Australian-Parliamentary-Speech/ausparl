@@ -54,10 +54,11 @@ ausparl::db_download(dir = "dataset")
 It checks the file's checksum, and if the download is interrupted, running the same line again
 resumes it. The example then finds `dataset/hansard.duckdb` by itself.
 
-Without it, the example uses the copy `db_connect()` would open (the file named by the
-`AUSPARL_DB` environment variable, or one installed by `ausparl::db_download()`), and if there
-is none, the small sample database bundled with the package (eight sitting days). It says so
-at the top of its output; the code is the same, only the numbers are smaller.
+Without it, the example uses the small sample database bundled with the package (eight
+sitting days), which it opens with `db_connect(sample = TRUE)`. It says so near the top of its
+output; the code is the same, only the numbers are smaller. If your full copy is somewhere
+else, change the `db_connect()` call in section 1 to `db_connect(path = "/path/to/hansard.duckdb")`,
+or to `db_connect()` if you set `AUSPARL_DB` or installed it with `ausparl::db_download()`.
 
 ## 4. Run it
 

@@ -1,34 +1,25 @@
-## ----setup--------------------------------------------------------------------
+## ----about--------------------------------------------------------------------
 #| include: false
 # ausparl: a worked example. walkthrough.R is the plain R version of walkthrough.qmd, made
 # with knitr::purl(); edit the .qmd, not the .R. Run it from the top folder of the repository
 # with source("example/walkthrough.R", echo = TRUE), or step through it line by line.
+
+
+## ----setup--------------------------------------------------------------------
 library(ausparl)
-suppressPackageStartupMessages(library(dplyr))
+library(dplyr, warn.conflicts = FALSE)
 library(ggplot2)
 
-# Use the full database in dataset/ if it is there (Quarto runs this file from example/, a
-# plain R run usually starts in the top folder); otherwise the copy db_connect() finds by
-# itself (AUSPARL_DB, or one installed by db_download()); otherwise the bundled sample.
-local_db <- c(
-  file.path("..", "dataset", "hansard.duckdb"),
-  file.path("dataset", "hansard.duckdb")
-)
-local_db <- local_db[file.exists(local_db)]
-if (length(local_db) > 0) {
-  db_connect(path = local_db[1])
-  on_sample <- FALSE
+
+## ----connect-db---------------------------------------------------------------
+# Quarto runs this file from example/; a plain R run starts in the top folder.
+full_db <- c("dataset/hansard.duckdb", "../dataset/hansard.duckdb")
+full_db <- full_db[file.exists(full_db)]
+on_sample <- length(full_db) == 0
+if (on_sample) {
+  db_connect(sample = TRUE)
 } else {
-  on_sample <- tryCatch(
-    {
-      db_connect()
-      FALSE
-    },
-    ausparl_error = function(e) {
-      db_connect(sample = TRUE)
-      TRUE
-    }
-  )
+  db_connect(path = full_db[1])
 }
 
 
@@ -37,9 +28,9 @@ if (length(local_db) > 0) {
 #| results: asis
 if (on_sample) {
   cat(
-    "Note: this run uses the small sample database bundled with ausparl (eight sitting",
-    "days), so the numbers are small. For the full database, run",
-    "ausparl::db_download(dir = \"dataset\") once from the top folder of the repository.\n"
+    "\nThis run uses the sample database, so the numbers below are small. For the full",
+    "database, run `db_download(dir = \"dataset\")` once from the top folder of the",
+    "repository and run the example again.\n"
   )
 }
 

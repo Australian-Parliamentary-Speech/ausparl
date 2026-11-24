@@ -27,3 +27,6 @@ example/.gitignore
 dataset/*.duckdb
 dataset/*.part
 dataset/*.verified
+
+# pkgdown site
+docs/
