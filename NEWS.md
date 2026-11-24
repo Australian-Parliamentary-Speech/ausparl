@@ -1,3 +1,10 @@
+# ausparl (development version)
+
+* `db_download()` no longer deletes the download when its checksum cannot be computed
+  (the file is missing or unreadable, for example because a second download into the same
+  place removed it). It keeps the partial file and says how to resume. It also says that the
+  checksum step takes about a minute.
+
 # ausparl 0.1.1
 
 * Added authors: Pat Leslie, Marija Taflaga, Kenneth Benoit, Rohan Alexander and Keith
