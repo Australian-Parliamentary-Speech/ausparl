@@ -186,6 +186,7 @@ installs exactly that version.
 
 | ausparl | Package DOI | Database version | Database DOI |
 |----|----|----|----|
+| 0.1.2 | [10.5281/zenodo.24493556](https://doi.org/10.5281/zenodo.24493556) | 7.0.0-20261123 | [10.5281/zenodo.24452577](https://doi.org/10.5281/zenodo.24452577) |
 | 0.1.1 | [10.5281/zenodo.24491242](https://doi.org/10.5281/zenodo.24491242) | 7.0.0-20261123 | [10.5281/zenodo.24452577](https://doi.org/10.5281/zenodo.24452577) |
 | 0.1.0 | none | 7.0.0-20261123 | [10.5281/zenodo.24452577](https://doi.org/10.5281/zenodo.24452577) |
 
@@ -206,7 +207,7 @@ version it pins. For this release:
 > Leslie, P., Taflaga, M., Benoit, K., Alexander, R., Dowding, K. and
 > Zhu, G. (2026). ausparl: Query the Australian Parliamentary Hansard
 > Database. R package version 0.1.2.
-> <https://doi.org/10.5281/zenodo.24491241>. Using Hansard database
+> <https://doi.org/10.5281/zenodo.24493556>. Using Hansard database
 > version 7.0.0-20261123 (<https://doi.org/10.5281/zenodo.24452577>).
 
 In R, `citation("ausparl")` gives the same citation for the version you
