@@ -1,5 +1,7 @@
 year <- if (is.null(meta$Date)) format(Sys.Date(), "%Y") else sub("-.*", "", meta$Date)
 data_version <- meta$`Config/ausparl/data_version`
+# Concept DOI of the package: covers all versions and resolves to the latest.
+pkg_doi <- "10.5281/zenodo.24491241"
 data_doi <- paste0("10.5281/zenodo.", meta$`Config/ausparl/zenodo_record`)
 
 authors <- c(
@@ -22,10 +24,11 @@ bibentry(
     " (https://doi.org/", data_doi, ")"
   ),
   url = "https://github.com/Australian-Parliamentary-Speech/ausparl",
+  doi = pkg_doi,
   textVersion = paste0(
     "Leslie, P., Taflaga, M., Benoit, K., Alexander, R., Dowding, K. and Zhu, G. (", year, "). ",
     "ausparl: Query the Australian Parliamentary Hansard Database. R package version ",
     meta$Version, ", using Hansard database version ", data_version, " (https://doi.org/",
-    data_doi, "). https://github.com/Australian-Parliamentary-Speech/ausparl"
+    data_doi, "). https://doi.org/", pkg_doi
   )
 )
