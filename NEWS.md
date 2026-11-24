@@ -1,7 +1,11 @@
 # ausparl (development version)
 
 * Added authors: Pat Leslie, Marija Taflaga, Kenneth Benoit, Rohan Alexander and Keith
-  Dowding, alongside Guangnan Zhu (maintainer).
+  Dowding, alongside Guangnan Zhu. Pat Leslie is now the maintainer.
+* Tests pass with duckdb 2.x, which keeps one database instance per file: the raw test
+  connection opens its own copy of the sample. `db_connect()` explains the error duckdb 2.x
+  gives when another connection holds the file with different settings.
+* Added `CITATION.cff` and a suggested citation in the README.
 * New vignette, `vignette("database")`: a guide to the tables, identifiers, turn types, speaker
   resolution, date-scoped context views and provenance of the Hansard database. It runs on the
   bundled sample database.

@@ -158,16 +158,23 @@ version.
 
 ## Authors
 
-Pat Leslie, Marija Taflaga, Kenneth Benoit, Rohan Alexander, Keith Dowding and Guangnan Zhu
-(maintainer).
+Pat Leslie (maintainer), Marija Taflaga, Kenneth Benoit, Rohan Alexander, Keith Dowding and
+Guangnan Zhu.
 
 ## Citation
 
-To cite ausparl in publications, run:
+If you use ausparl, please cite the version you used, and the database version it pins.
+For this release:
 
-```r
-citation("ausparl")
-```
+> Leslie, P., Taflaga, M., Benoit, K., Alexander, R., Dowding, K. and Zhu, G. (2026).
+> ausparl: Query the Australian Parliamentary Hansard Database. R package version 0.1.0,
+> using Hansard database version 7.0.0-20261123
+> (<https://doi.org/10.5281/zenodo.24452577>).
+> <https://github.com/Australian-Parliamentary-Speech/ausparl>
+
+In R, `citation("ausparl")` gives the same citation for the version you have installed, with
+a BibTeX entry (`toBibtex(citation("ausparl"))`). GitHub's *Cite this repository* button,
+built from [`CITATION.cff`](CITATION.cff), gives it in APA and BibTeX.
 
 The citation records the package version and the database version it pins, with the
 database's Zenodo DOI. Report the `schema_version` and `built_at` from `db_info()` as well.

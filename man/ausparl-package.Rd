@@ -108,21 +108,22 @@ cite the package, run \code{citation("ausparl")}.
 Useful links:
 \itemize{
   \item \url{https://github.com/Australian-Parliamentary-Speech/ausparl}
+  \item \url{https://australian-parliamentary-speech.github.io/ausparl/}
   \item Report bugs at \url{https://github.com/Australian-Parliamentary-Speech/ausparl/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Guangnan Zhu \email{Guangnan.Zhu@anu.edu.au}
+\strong{Maintainer}: Pat Leslie \email{patrick.leslie@anu.edu.au} (\href{https://orcid.org/0000-0002-9218-8981}{ORCID})
 
 Authors:
 \itemize{
-  \item Guangnan Zhu \email{Guangnan.Zhu@anu.edu.au}
   \item Pat Leslie \email{patrick.leslie@anu.edu.au} (\href{https://orcid.org/0000-0002-9218-8981}{ORCID})
   \item Marija Taflaga
   \item Kenneth Benoit
   \item Rohan Alexander
   \item Keith Dowding
+  \item Guangnan Zhu \email{Guangnan.Zhu@anu.edu.au}
 }
 
 }

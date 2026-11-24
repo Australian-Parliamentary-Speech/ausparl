@@ -2,13 +2,13 @@ Package: ausparl
 Title: Query the Australian Parliamentary Hansard Database
 Version: 0.1.0
 Authors@R: c(
-    person("Pat", "Leslie", email = "patrick.leslie@anu.edu.au", role = "aut",
+    person("Pat", "Leslie", email = "patrick.leslie@anu.edu.au", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-9218-8981")),
     person("Marija", "Taflaga", role = "aut"),
     person("Kenneth", "Benoit", role = "aut"),
     person("Rohan", "Alexander", role = "aut"),
     person("Keith", "Dowding", role = "aut"),
-    person("Guangnan", "Zhu", email = "Guangnan.Zhu@anu.edu.au", role = c("aut", "cre"))
+    person("Guangnan", "Zhu", email = "Guangnan.Zhu@anu.edu.au", role = "aut")
   )
 Description: Basic, reproducible query access to the pre-built Australian
     Hansard 'DuckDB' database: filtered access to sittings, speeches and
