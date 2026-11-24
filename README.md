@@ -54,6 +54,10 @@ db_download()
 db_connect()
 ```
 
+**Keep working while it downloads.** `db_download(background = TRUE)` runs the download in the
+background: as a job in RStudio's Background Jobs pane, or elsewhere in a separate R process
+that keeps going if you close R. Connect once it has finished.
+
 **Download it into a folder of your own**, such as the `dataset/` folder of a clone of this
 repository, and open it by path:
 
