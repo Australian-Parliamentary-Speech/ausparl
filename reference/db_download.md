@@ -49,10 +49,12 @@ With `dir`, the database is installed directly in that directory as
 `hansard.duckdb` (the directory is created if needed), for example
 `db_download(dir = "dataset")` in a project folder.
 [`db_connect()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_connect.md)
-does not look there by itself: open that copy with
-`db_connect(path = file.path(dir, "hansard.duckdb"))` or by setting
-`AUSPARL_DB` to it. A verified copy of the same database version already
-in `dir` is reused; a copy of another version is replaced.
+with no arguments finds that copy only when it is in the working
+directory or its `dataset/` folder, or after it was opened once in the
+session; elsewhere, open it with
+`db_connect(path = file.path(dir, "hansard.duckdb"))` or set
+`AUSPARL_DB`. A verified copy of the same database version already in
+`dir` is reused; a copy of another version is replaced.
 
 **In the background.** With `background = TRUE` the download runs
 outside your R session, so you can keep working while it runs. In

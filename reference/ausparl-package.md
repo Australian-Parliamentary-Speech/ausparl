@@ -25,7 +25,9 @@ sitting days is bundled for examples and tests:
 [`db_connect()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_connect.md)
 chooses the file in this order: an explicit `path` (or `sample = TRUE`),
 then the `AUSPARL_DB` environment variable, then the copy installed by
-[`db_download()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_download.md).
+[`db_download()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_download.md),
+then the full database used earlier in the session, then
+`hansard.duckdb` in the working directory or its `dataset/` folder.
 Query functions connect on first use if no connection is open.
 
 ## Functions by task

@@ -27,12 +27,25 @@ The DBI connection, invisibly.
 ## Details
 
 The file is chosen as follows. An explicit `path` or `sample = TRUE` is
-used as given (passing both is an error). With neither, the `AUSPARL_DB`
-environment variable is used. Without that either, the copy installed by
-[`db_download()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_download.md)
-for the database version this release of ausparl pins is used, and a
-message says which version was opened. `db_connect()` never downloads
-anything itself.
+used as given (passing both is an error). With neither, the first of
+these that exists is opened:
+
+1.  the file named by the `AUSPARL_DB` environment variable;
+
+2.  the copy installed by
+    [`db_download()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_download.md)
+    in the user data directory, for the database version this release of
+    ausparl pins;
+
+3.  the full database opened earlier in this R session (never the
+    bundled sample);
+
+4.  `hansard.duckdb` in the working directory, then in its `dataset/`
+    folder, as `db_download(dir = ".")` and
+    `db_download(dir = "dataset")` leave it.
+
+A message says which file was opened in cases 2 to 4. `db_connect()`
+never downloads anything itself.
 
 On connect the DuckDB full-text-search extension (`fts`) is loaded. If
 it is not installed yet, it is installed once into

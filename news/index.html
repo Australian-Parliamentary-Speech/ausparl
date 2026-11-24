@@ -37,6 +37,11 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="ausparl-development-version">ausparl (development version)<a class="anchor" aria-label="anchor" href="#ausparl-development-version"></a></h2>
+<ul><li>
+<code><a href="../reference/db_connect.html">db_connect()</a></code> with no arguments now also finds the full database used earlier in the session (as <code><a href="../reference/db_info.html">db_info()</a></code> and the query functions already did), and <code>hansard.duckdb</code> in the working directory or its <code>dataset/</code> folder, where <code>db_download(dir = )</code> puts it. It says which file it opened, and the “no database” error explains where such copies are found.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.2" id="ausparl-012">ausparl 0.1.2<a class="anchor" aria-label="anchor" href="#ausparl-012"></a></h2>
 <ul><li>The “Getting started” vignette is held back from this release while it is revised. <code><a href="../articles/database.html">vignette("database")</a></code> remains; the worked example in <code>example/</code> covers a first analysis.</li>
 <li>

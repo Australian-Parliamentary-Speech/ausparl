@@ -69,8 +69,9 @@ the version this release pins from Zenodo and checks it, and <code><a href="db_c
 no arguments. A small sample database of eight sitting days is bundled for examples and tests:
 <code>db_connect(sample = TRUE)</code>.</p>
 <p><code><a href="db_connect.html">db_connect()</a></code> chooses the file in this order: an explicit <code>path</code> (or <code>sample = TRUE</code>), then
-the <code>AUSPARL_DB</code> environment variable, then the copy installed by <code><a href="db_download.html">db_download()</a></code>. Query
-functions connect on first use if no connection is open.</p>
+the <code>AUSPARL_DB</code> environment variable, then the copy installed by <code><a href="db_download.html">db_download()</a></code>, then the
+full database used earlier in the session, then <code>hansard.duckdb</code> in the working directory or
+its <code>dataset/</code> folder. Query functions connect on first use if no connection is open.</p>
     </div>
     <div class="section level2">
     <h2 id="functions-by-task">Functions by task<a class="anchor" aria-label="anchor" href="#functions-by-task"></a></h2>

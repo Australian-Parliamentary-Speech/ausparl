@@ -68,10 +68,14 @@ Any connection already open is closed first. The database file is never written 
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The file is chosen as follows. An explicit <code>path</code> or <code>sample = TRUE</code> is used as given
-(passing both is an error). With neither, the <code>AUSPARL_DB</code> environment variable is used.
-Without that either, the copy installed by <code><a href="db_download.html">db_download()</a></code> for the database version this
-release of ausparl pins is used, and a message says which version was opened.
-<code>db_connect()</code> never downloads anything itself.</p>
+(passing both is an error). With neither, the first of these that exists is opened:</p><ol><li><p>the file named by the <code>AUSPARL_DB</code> environment variable;</p></li>
+<li><p>the copy installed by <code><a href="db_download.html">db_download()</a></code> in the user data directory, for the database
+version this release of ausparl pins;</p></li>
+<li><p>the full database opened earlier in this R session (never the bundled sample);</p></li>
+<li><p><code>hansard.duckdb</code> in the working directory, then in its <code>dataset/</code> folder, as
+<code>db_download(dir = ".")</code> and <code>db_download(dir = "dataset")</code> leave it.</p></li>
+</ol><p>A message says which file was opened in cases 2 to 4. <code>db_connect()</code> never downloads
+anything itself.</p>
 <p>On connect the DuckDB full-text-search extension (<code>fts</code>) is loaded. If it is not installed
 yet, it is installed once into <code>tools::R_user_dir("ausparl", "cache")</code>, which needs network
 access. Installation never happens during tests or <code>R CMD check</code>, and is switched off with

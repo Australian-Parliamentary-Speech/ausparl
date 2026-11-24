@@ -91,13 +91,13 @@
 <span><span class="fu"><a href="reference/db_download.html">db_download</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/db_connect.html">db_connect</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><strong>Keep working while it downloads.</strong> <code>db_download(background = TRUE)</code> runs the download in the background: as a job in RStudio’s Background Jobs pane, or elsewhere in a separate R process that keeps going if you close R. Connect once it has finished.</p>
-<p><strong>Download it into a folder of your own</strong>, such as the <code>dataset/</code> folder of a clone of this repository, and open it by path:</p>
+<p><strong>Download it into a folder of your own</strong>, such as the <code>dataset/</code> folder of a clone of this repository. From that folder (or the one above <code>dataset/</code>), <code><a href="reference/db_connect.html">db_connect()</a></code> finds it by itself; from anywhere else, open it by path:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/db_download.html">db_download</a></span><span class="op">(</span>dir <span class="op">=</span> <span class="st">"dataset"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/db_connect.html">db_connect</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"dataset/hansard.duckdb"</span><span class="op">)</span></span></code></pre></div>
 <p><strong>Use a copy you already have.</strong> Pass its path, <code>db_connect(path = "/path/to/hansard.duckdb")</code>, or set it once in <code>~/.Renviron</code> so that <code><a href="reference/db_connect.html">db_connect()</a></code> finds it in every session:</p>
 <pre><code>AUSPARL_DB=/path/to/hansard.duckdb</code></pre>
-<p>You can open that file with <code>usethis::edit_r_environ()</code>; restart R after saving it. A <code>path</code> you pass comes first, then <code>AUSPARL_DB</code>, then the copy <code><a href="reference/db_download.html">db_download()</a></code> installed in the user data directory.</p>
+<p>You can open that file with <code>usethis::edit_r_environ()</code>; restart R after saving it. A <code>path</code> you pass comes first, then <code>AUSPARL_DB</code>, then the copy <code><a href="reference/db_download.html">db_download()</a></code> installed in the user data directory, then the full database you opened earlier in the session, then <code>hansard.duckdb</code> in the working directory or its <code>dataset/</code> folder.</p>
 <p><strong>Try it with the bundled sample</strong> (eight sitting days, no download needed):</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/db_connect.html">db_connect</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>

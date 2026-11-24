@@ -69,7 +69,10 @@ Jobs pane, or elsewhere in a separate R process that keeps going if you
 close R. Connect once it has finished.
 
 **Download it into a folder of your own**, such as the `dataset/` folder
-of a clone of this repository, and open it by path:
+of a clone of this repository. From that folder (or the one above
+`dataset/`),
+[`db_connect()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_connect.md)
+finds it by itself; from anywhere else, open it by path:
 
 ``` r
 
@@ -89,7 +92,9 @@ You can open that file with `usethis::edit_r_environ()`; restart R after
 saving it. A `path` you pass comes first, then `AUSPARL_DB`, then the
 copy
 [`db_download()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_download.md)
-installed in the user data directory.
+installed in the user data directory, then the full database you opened
+earlier in the session, then `hansard.duckdb` in the working directory
+or its `dataset/` folder.
 
 **Try it with the bundled sample** (eight sitting days, no download
 needed):
