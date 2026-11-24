@@ -17,37 +17,57 @@ execute:
 knitr::purl("example/walkthrough.qmd", "example/walkthrough.R", documentation = 1)
 from the top folder of the repository. -->
 
-```{r setup}
+```{r about}
 #| include: false
 # ausparl: a worked example. walkthrough.R is the plain R version of walkthrough.qmd, made
 # with knitr::purl(); edit the .qmd, not the .R. Run it from the top folder of the repository
 # with source("example/walkthrough.R", echo = TRUE), or step through it line by line.
-library(ausparl)
-suppressPackageStartupMessages(library(dplyr))
-library(ggplot2)
+```
 
-# Use the full database in dataset/ if it is there (Quarto runs this file from example/, a
-# plain R run usually starts in the top folder); otherwise the copy db_connect() finds by
-# itself (AUSPARL_DB, or one installed by db_download()); otherwise the bundled sample.
-local_db <- c(
-  file.path("..", "dataset", "hansard.duckdb"),
-  file.path("dataset", "hansard.duckdb")
-)
-local_db <- local_db[file.exists(local_db)]
-if (length(local_db) > 0) {
-  db_connect(path = local_db[1])
-  on_sample <- FALSE
+The example uses three packages: ausparl, dplyr for working with the results, and ggplot2 for
+one chart.
+
+```{r setup}
+library(ausparl)
+library(dplyr, warn.conflicts = FALSE)
+library(ggplot2)
+```
+
+## 1. Connect and check the version
+
+ausparl works on one database at a time, opened read-only with `db_connect()`. There are three
+ways to open one:
+
+- **The sample bundled with ausparl**: eight sitting days, nothing to download. Good for
+  trying the package; the numbers are small.
+
+  ```r
+  db_connect(sample = TRUE)
+  ```
+
+- **The full database in a folder of your own**, such as `dataset/` in this repository. Download
+  it once (about 9.5 GB), then open it by its path:
+
+  ```r
+  db_download(dir = "dataset")
+  db_connect(path = "dataset/hansard.duckdb")
+  ```
+
+- **The full database in the default place.** `db_download()` with no `dir` installs it in your
+  R user data directory, and `db_connect()` with no arguments then opens it. So does setting
+  the `AUSPARL_DB` environment variable to the path of a copy you already have.
+
+This example opens the full database if it is in `dataset/`, and the sample otherwise:
+
+```{r connect-db}
+# Quarto runs this file from example/; a plain R run starts in the top folder.
+full_db <- c("dataset/hansard.duckdb", "../dataset/hansard.duckdb")
+full_db <- full_db[file.exists(full_db)]
+on_sample <- length(full_db) == 0
+if (on_sample) {
+  db_connect(sample = TRUE)
 } else {
-  on_sample <- tryCatch(
-    {
-      db_connect()
-      FALSE
-    },
-    ausparl_error = function(e) {
-      db_connect(sample = TRUE)
-      TRUE
-    }
-  )
+  db_connect(path = full_db[1])
 }
 ```
 
@@ -56,17 +76,15 @@ if (length(local_db) > 0) {
 #| results: asis
 if (on_sample) {
   cat(
-    "Note: this run uses the small sample database bundled with ausparl (eight sitting",
-    "days), so the numbers are small. For the full database, run",
-    "ausparl::db_download(dir = \"dataset\") once from the top folder of the repository.\n"
+    "\nThis run uses the sample database, so the numbers below are small. For the full",
+    "database, run `db_download(dir = \"dataset\")` once from the top folder of the",
+    "repository and run the example again.\n"
   )
 }
 ```
 
-## 1. Connect and check the version
-
-`db_connect()` opens the database read-only. `db_info()` says which build it is: quote
-`schema_version` and `built_at` in your methods.
+`db_info()` says which build is open: quote `schema_version` and `built_at` in your methods.
+`fts_available` says whether full-text search (section 3) can run.
 
 ```{r connect}
 db_info() |>
