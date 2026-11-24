@@ -19,8 +19,9 @@ db_file_name <- "hansard.duckdb"
 #'
 #' With `dir`, the database is installed directly in that directory as `hansard.duckdb` (the
 #' directory is created if needed), for example `db_download(dir = "dataset")` in a project
-#' folder. [db_connect()] does not look there by itself: open that copy with
-#' `db_connect(path = file.path(dir, "hansard.duckdb"))` or by setting `AUSPARL_DB` to it. A
+#' folder. [db_connect()] with no arguments finds that copy only when it is in the working
+#' directory or its `dataset/` folder, or after it was opened once in the session; elsewhere,
+#' open it with `db_connect(path = file.path(dir, "hansard.duckdb"))` or set `AUSPARL_DB`. A
 #' verified copy of the same database version already in `dir` is reused; a copy of another
 #' version is replaced.
 #'

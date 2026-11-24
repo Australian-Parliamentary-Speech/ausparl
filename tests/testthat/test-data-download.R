@@ -213,6 +213,79 @@ test_that("T-4.6 D9: db_connect() falls back to the verified copy after explicit
   expect_identical(db_info()$path, normalizePath(sample_db_path()))
 })
 
+# Isolates the session's last-used database for one test.
+local_last_path <- function(value, env = parent.frame()) {
+  old <- .ausparl$last_path
+  withr::defer(.ausparl$last_path <- old, envir = env)
+  .ausparl$last_path <- value
+}
+
+test_that("db_connect() falls back to the full database used earlier in the session", {
+  local_download_env()
+  local_mocked_bindings(pinned_release = function() test_pin)
+  withr::local_dir(withr::local_tempdir())
+  copy <- local_sample_copy(character())
+  local_last_path(copy)
+  expect_message(db_connect(), "Opening")
+  expect_identical(db_info()$path, normalizePath(copy))
+})
+
+test_that("db_connect() never falls back to the bundled sample used earlier", {
+  local_download_env()
+  local_mocked_bindings(pinned_release = function() test_pin)
+  withr::local_dir(withr::local_tempdir())
+  local_last_path(sample_db_path())
+  expect_error(db_connect(), class = "ausparl_db_error")
+})
+
+test_that("db_connect() finds hansard.duckdb in the working directory, then in dataset/", {
+  local_download_env()
+  local_mocked_bindings(pinned_release = function() test_pin)
+  local_last_path(NULL)
+  project <- withr::local_tempdir()
+  withr::local_dir(project)
+
+  dir.create("dataset")
+  file.copy(sample_db_path(), file.path("dataset", "hansard.duckdb"))
+  expect_message(db_connect(), "dataset")
+  expect_identical(db_info()$path, normalizePath(file.path(project, "dataset", "hansard.duckdb")))
+
+  # The dataset/ copy is now the session's last database; forget it to test the order on disk.
+  db_disconnect()
+  .ausparl$last_path <- NULL
+  file.copy(sample_db_path(), "hansard.duckdb")
+  expect_message(db_connect(), "hansard.duckdb")
+  expect_identical(db_info()$path, normalizePath(file.path(project, "hansard.duckdb")))
+  db_disconnect()
+})
+
+test_that("AUSPARL_DB and the downloaded copy come before the session's and nearby files", {
+  dir <- local_download_env()
+  local_download_mocks()
+  project <- withr::local_tempdir()
+  withr::local_dir(project)
+  file.copy(sample_db_path(), "hansard.duckdb")
+  local_last_path(local_sample_copy(character()))
+
+  path <- suppressMessages(db_download())
+  expect_message(db_connect(), "downloaded database")
+  expect_identical(db_info()$path, normalizePath(path))
+
+  env_copy <- local_sample_copy(character())
+  withr::local_envvar(AUSPARL_DB = env_copy)
+  expect_no_message(db_connect())
+  expect_identical(db_info()$path, normalizePath(env_copy))
+})
+
+test_that("the no-database error explains where dir = downloads are found", {
+  local_download_env()
+  local_mocked_bindings(pinned_release = function() test_pin)
+  withr::local_dir(withr::local_tempdir())
+  local_last_path(NULL)
+  err <- expect_error(db_connect(), class = "ausparl_db_error")
+  expect_match(conditionMessage(err), "dir = ", fixed = TRUE)
+})
+
 test_that("T-4.12 D6: the Zenodo record is fetched and parsed, and failures are db errors", {
   response <- function(status, body) {
     list(status_code = status, content = charToRaw(body))

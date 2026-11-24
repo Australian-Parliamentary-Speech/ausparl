@@ -23,8 +23,9 @@ no arguments. A small sample database of eight sitting days is bundled for examp
 \code{db_connect(sample = TRUE)}.
 
 \code{\link[=db_connect]{db_connect()}} chooses the file in this order: an explicit \code{path} (or \code{sample = TRUE}), then
-the \code{AUSPARL_DB} environment variable, then the copy installed by \code{\link[=db_download]{db_download()}}. Query
-functions connect on first use if no connection is open.
+the \code{AUSPARL_DB} environment variable, then the copy installed by \code{\link[=db_download]{db_download()}}, then the
+full database used earlier in the session, then \code{hansard.duckdb} in the working directory or
+its \verb{dataset/} folder. Query functions connect on first use if no connection is open.
 }
 
 \section{Functions by task}{

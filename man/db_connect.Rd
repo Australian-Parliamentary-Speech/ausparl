@@ -20,10 +20,18 @@ Any connection already open is closed first. The database file is never written 
 }
 \details{
 The file is chosen as follows. An explicit \code{path} or \code{sample = TRUE} is used as given
-(passing both is an error). With neither, the \code{AUSPARL_DB} environment variable is used.
-Without that either, the copy installed by \code{\link[=db_download]{db_download()}} for the database version this
-release of ausparl pins is used, and a message says which version was opened.
-\code{db_connect()} never downloads anything itself.
+(passing both is an error). With neither, the first of these that exists is opened:
+\enumerate{
+\item the file named by the \code{AUSPARL_DB} environment variable;
+\item the copy installed by \code{\link[=db_download]{db_download()}} in the user data directory, for the database
+version this release of ausparl pins;
+\item the full database opened earlier in this R session (never the bundled sample);
+\item \code{hansard.duckdb} in the working directory, then in its \verb{dataset/} folder, as
+\code{db_download(dir = ".")} and \code{db_download(dir = "dataset")} leave it.
+}
+
+A message says which file was opened in cases 2 to 4. \code{db_connect()} never downloads
+anything itself.
 
 On connect the DuckDB full-text-search extension (\code{fts}) is loaded. If it is not installed
 yet, it is installed once into \code{tools::R_user_dir("ausparl", "cache")}, which needs network
