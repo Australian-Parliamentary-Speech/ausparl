@@ -12,7 +12,6 @@ articles:
   - title: Guides
     navbar: ~
     contents:
-      - ausparl
       - database
 
 reference:

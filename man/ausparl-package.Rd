@@ -12,8 +12,8 @@ pre-built DuckDB database and linked to members, parties, ministries and elector
 Parliamentary Handbook. Queries run inside the database and only their results come back into
 R; the database is opened read-only and never loaded into memory.
 
-Start with \code{vignette("ausparl")} for a worked analysis, and \code{vignette("database")} for a guide
-to the tables, identifiers and conventions of the database.
+Start with \code{vignette("database")}, a guide to the tables, identifiers and conventions of the
+database.
 }
 \section{Getting the database}{
 

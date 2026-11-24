@@ -116,9 +116,8 @@ get_speeches(member = howard, limit = 20) |>
 db_disconnect()
 ```
 
-Two vignettes go further: `vignette("ausparl")` walks through a full analysis, and
 `vignette("database")` describes the database itself: its tables, identifiers, turn types,
-speaker matching and provenance. The package help page, `?ausparl`, lists the functions by task
+speaker matching and provenance. For a first analysis, see the worked example below. The package help page, `?ausparl`, lists the functions by task
 and the package options.
 
 The documentation is also online at

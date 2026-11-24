@@ -33,6 +33,7 @@ check: document
 	_R_CHECK_FORCE_SUGGESTS_=false R CMD check --as-cran --no-manual $(TARBALL)
 
 # Precomputes vignettes/ausparl.Rmd from ausparl.Rmd.orig against the full DB; needs AUSPARL_DB.
+# The vignette is held back as a draft in data-raw/vignette-draft/: move its .orig back first.
 # Run alone: a full-DB query can use several GB.
 vignette:
 	$(R) data-raw/build-vignette.R
