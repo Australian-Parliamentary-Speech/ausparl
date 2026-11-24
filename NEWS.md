@@ -6,6 +6,10 @@
   same place cannot corrupt it. Calling `db_download()` while one runs reports its progress.
 * In a background job, `db_download()` shows curl's progress bar, which it otherwise shows only
   in interactive sessions.
+* `db_download()` no longer deletes the download when its checksum cannot be computed
+  (the file is missing or unreadable, for example because a second download into the same
+  place removed it). It keeps the partial file and says how to resume. It also says that the
+  checksum step takes about a minute.
 
 # ausparl 0.1.1
 

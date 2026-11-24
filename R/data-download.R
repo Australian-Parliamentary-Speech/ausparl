@@ -135,7 +135,17 @@ db_download <- function(force = FALSE, dir = NULL, background = FALSE) {
   marker <- paste0(dest, ".verified")
   download_file(file$url, part, call = call)
 
-  md5 <- unname(tools::md5sum(part))
+  cli::cli_inform(c("i" = "Checking the download's checksum; this takes about a minute."))
+  md5 <- file_md5(part)
+  if (is.na(md5)) {
+    # The file could not be read, so nothing is known about it: keep it for the next attempt.
+    abort_db(c(
+      "Could not read the downloaded file to check it.",
+      "x" = "{.file {part}} is missing or unreadable.",
+      "i" = "If another {.code db_download()} is running into the same place, let it finish.
+             Otherwise run {.code db_download()} again: it resumes from the partial file."
+    ), call = call)
+  }
   if (!identical(tolower(md5), file$md5)) {
     unlink(part)
     abort_db(c(
@@ -308,3 +318,11 @@ format_size <- function(bytes) {
 }
 
 if_null <- function(x, y) if (is.null(x)) y else x
+
+# The file's MD5, or NA when it cannot be read (tools::md5sum() does not error on that).
+file_md5 <- function(path) {
+  if (!file.exists(path)) {
+    return(NA_character_)
+  }
+  unname(tools::md5sum(path))
+}

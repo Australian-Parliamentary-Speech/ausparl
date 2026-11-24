@@ -122,6 +122,22 @@ test_that("T-4.14 D4: an MD5 mismatch raises a db error and leaves nothing insta
   expect_null(cached_db_path("7.0.0-20261123"))
 })
 
+test_that("T-4.14 D4: an unreadable download is kept, not deleted, and nothing is installed", {
+  dir <- local_download_env()
+  local_download_mocks()
+  local_mocked_bindings(file_md5 = function(path) NA_character_)
+  err <- expect_error(suppressMessages(db_download()), class = "ausparl_db_error")
+  expect_match(conditionMessage(err), "Could not read")
+  expect_true(file.exists(paste0(installed_path(dir), ".part")))
+  expect_false(file.exists(installed_path(dir)))
+  expect_false(file.exists(paste0(installed_path(dir), ".verified")))
+})
+
+test_that("file_md5() is NA for a missing file and the MD5 otherwise", {
+  expect_identical(file_md5(tempfile()), NA_character_)
+  expect_identical(file_md5(sample_db_path()), unname(tools::md5sum(sample_db_path())))
+})
+
 test_that("T-4.12 D5: a verified copy is reused; force = TRUE downloads again", {
   dir <- local_download_env()
   calls <- local_download_mocks()
