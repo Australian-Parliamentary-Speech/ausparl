@@ -24,6 +24,15 @@ authors:
     given-names: Keith
   - family-names: Zhu
     given-names: Guangnan
+# Concept DOI: always resolves to the latest version.
+doi: 10.5281/zenodo.24491241
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.24491241
+    description: All versions of ausparl (resolves to the latest)
+  - type: doi
+    value: 10.5281/zenodo.24491242
+    description: ausparl 0.1.1
 version: 0.1.1
 date-released: "2026-11-24"
 license: GPL-3.0-or-later
