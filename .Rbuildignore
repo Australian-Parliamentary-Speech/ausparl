@@ -14,3 +14,8 @@
 ^pkgdown$
 ^\.github$
 ^CITATION\.cff$
+(^|/)\.dropbox
+conflicted copy
+Selective Sync Conflict
+(^|/)Icon\r$
+(^|/)\.DS_Store$
