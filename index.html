@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="index.html">ausparl</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,7 +79,7 @@
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"Australian-Parliamentary-Speech/ausparl"</span><span class="op">)</span></span></code></pre></div>
 <p>To install a particular release, name its tag:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"Australian-Parliamentary-Speech/ausparl@v0.1.2"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"Australian-Parliamentary-Speech/ausparl@v0.1.3"</span><span class="op">)</span></span></code></pre></div>
 <p>This installs the package and the packages it depends on, including duckdb and quanteda. R 4.1 or later is required. The Hansard database itself (about 9.5 GB) is separate: it is not installed with the package, and it is never loaded into memory, because ausparl queries it on disk.</p>
 </div>
 <div class="section level2">
@@ -258,7 +258,7 @@
 </h2>
 <p>If you use ausparl, please cite the version you used, and the database version it pins. For this release:</p>
 <blockquote>
-<p>Leslie, P., Taflaga, M., Benoit, K., Alexander, R., Dowding, K. and Zhu, G. (2026). ausparl: Query the Australian Parliamentary Hansard Database. R package version 0.1.2. <a href="https://doi.org/10.5281/zenodo.24493556" class="external-link uri">https://doi.org/10.5281/zenodo.24493556</a>. Using Hansard database version 7.0.0-20261123 (<a href="https://doi.org/10.5281/zenodo.24452577" class="external-link uri">https://doi.org/10.5281/zenodo.24452577</a>).</p>
+<p>Leslie, P., Taflaga, M., Benoit, K., Alexander, R., Dowding, K. and Zhu, G. (2026). ausparl: Query the Australian Parliamentary Hansard Database. R package version 0.1.3. <a href="https://doi.org/10.5281/zenodo.24491241" class="external-link uri">https://doi.org/10.5281/zenodo.24491241</a>. Using Hansard database version 7.0.0-20261123 (<a href="https://doi.org/10.5281/zenodo.24452577" class="external-link uri">https://doi.org/10.5281/zenodo.24452577</a>).</p>
 </blockquote>
 <p>In R, <code>citation("ausparl")</code> gives the same citation for the version you have installed, with a BibTeX entry (<code>toBibtex(citation("ausparl"))</code>). GitHub’s <em>Cite this repository</em> button, built from <a href="CITATION.cff"><code>CITATION.cff</code></a>, gives it in APA and BibTeX.</p>
 <p>For another version, find its DOI in the table under <a href="#versions">Versions</a>, or on <a href="https://doi.org/10.5281/zenodo.24491241" class="external-link">Zenodo</a>. The citation records the package version and the database version it pins, with the database’s Zenodo DOI. Report the <code>schema_version</code> and <code>built_at</code> from <code><a href="reference/db_info.html">db_info()</a></code> as well.</p>

@@ -22,7 +22,7 @@ Source:
 
 Leslie, P., Taflaga, M., Benoit, K., Alexander, R., Dowding, K. and Zhu,
 G. (2026). ausparl: Query the Australian Parliamentary Hansard Database.
-R package version 0.1.2, using Hansard database version 7.0.0-20261123
+R package version 0.1.3, using Hansard database version 7.0.0-20261123
 (https://doi.org/10.5281/zenodo.24452577).
 https://doi.org/10.5281/zenodo.24491241
 
@@ -30,7 +30,7 @@ https://doi.org/10.5281/zenodo.24491241
       title = {{ausparl}: Query the Australian Parliamentary Hansard Database},
       author = {Pat Leslie and Marija Taflaga and Kenneth Benoit and Rohan Alexander and Keith Dowding and Guangnan Zhu},
       year = {2026},
-      note = {R package version 0.1.2, using Hansard database version 7.0.0-20261123 (https://doi.org/10.5281/zenodo.24452577)},
+      note = {R package version 0.1.3, using Hansard database version 7.0.0-20261123 (https://doi.org/10.5281/zenodo.24452577)},
       url = {https://github.com/Australian-Parliamentary-Speech/ausparl},
       doi = {10.5281/zenodo.24491241},
     }

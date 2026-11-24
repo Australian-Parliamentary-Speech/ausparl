@@ -1,6 +1,6 @@
 # Changelog
 
-## ausparl (development version)
+## ausparl 0.1.3
 
 - [`db_connect()`](https://australian-parliamentary-speech.github.io/ausparl/reference/db_connect.md)
   with no arguments now also finds the full database used earlier in the
