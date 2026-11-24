@@ -18,7 +18,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/Australian-Parliamentary-Speech/ausparl/blob/v0.1.1/inst/CITATION)
+[`inst/CITATION`](https://github.com/Australian-Parliamentary-Speech/ausparl/blob/main/inst/CITATION)
 
 Leslie, P., Taflaga, M., Benoit, K., Alexander, R., Dowding, K. and Zhu,
 G. (2026). ausparl: Query the Australian Parliamentary Hansard Database.
