@@ -31,6 +31,9 @@ identifiers:
     value: 10.5281/zenodo.24491241
     description: All versions of ausparl (resolves to the latest)
   - type: doi
+    value: 10.5281/zenodo.24493556
+    description: ausparl 0.1.2
+  - type: doi
     value: 10.5281/zenodo.24491242
     description: ausparl 0.1.1
 version: 0.1.2
